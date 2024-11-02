@@ -18,6 +18,10 @@ namespace Cf.Scenes.Property
             // position from label
             position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
             
+            // define rect by position
+            Rect sceneFieldRect = new Rect(position.x, position.y, position.width - 50, position.height);
+            Rect expendBtnRect = new Rect(position.x + position.width - 45, position.y, 45, position.height);
+            
             // target [ obj ] when null
             if (sceneAsset == null)
             {
@@ -25,19 +29,28 @@ namespace Cf.Scenes.Property
                 return;
             }
 
-            // !!! value is true !!!
+            // value scan
             sceneAsset.objectReferenceValue =
-                EditorGUI.ObjectField(position, sceneAsset.objectReferenceValue, typeof(SceneAsset), false);
+                EditorGUI.ObjectField(sceneFieldRect, sceneAsset.objectReferenceValue, typeof(SceneAsset), false);
             
-            // reference [ obj ] null
+            // reference [ obj type ] is not match 
             if (sceneAsset.objectReferenceValue == null)
             {
                 EditorGUI.EndProperty();
                 return;
             }
             
-            // !!! value is true !!!
+            // value paste
             sceneName.stringValue = sceneAsset.objectReferenceValue.name;
+            
+            // expend button, only editor
+#if UNITY_EDITOR
+            if (GUI.Button(expendBtnRect, "Edit"))
+            {
+                Debug.Log(property.serializedObject.targetObject.GetType());
+                // SceneFieldEditor.Edit(sceneAsset.objectReferenceValue, sceneName.stringValue);
+            }
+#endif
 
             // end
             EditorGUI.EndProperty();

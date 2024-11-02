@@ -12,12 +12,12 @@ namespace Cf.Scenes
         [SerializeField] private string codeName;
         [SerializeField] [TextArea] private string description;
 
-        [Header("Load With")] 
-        [SerializeField] private List<SceneField> loadWithSceneList;
+        [Header("Additive")] 
+        [SerializeField] private List<SceneField> additiveSceneList;
 
         private void Start()
         {
-            SceneLoader.AsyncLoad(loadWithSceneList, null, null);
+            StartCoroutine(SceneLoader.AsyncLoad(additiveSceneList, null, null));
         }
     }
 }

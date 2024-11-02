@@ -14,7 +14,7 @@ namespace Cf.Scenes
         // get name 
         public string SceneName => sceneName;
         
-        // implicit : change Type , sceneField -> string
+        // implicit : change dynamic type , sceneField -> string
         public static implicit operator string(SceneField obj)
         {
             return obj.sceneName;

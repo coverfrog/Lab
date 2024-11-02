@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/UnityBaseFiles/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Content/MobilePuzzleGame/Scenes/Home.unity
+    guid: 80b67b3ad8881ee4cb7c8cefba5fae28
+  - enabled: 1
+    path: Assets/Content/MobilePuzzleGame/Scenes/Add.unity
+    guid: e05b74a0fe89e2b4ea8d70843261a7ef
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
