@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -44,13 +45,10 @@ namespace Cf.Scenes.Property
             sceneName.stringValue = sceneAsset.objectReferenceValue.name;
             
             // expend button, only editor
-#if UNITY_EDITOR
             if (GUI.Button(expendBtnRect, "Edit"))
             {
-                Debug.Log(property.serializedObject.targetObject.GetType());
-                // SceneFieldEditor.Edit(sceneAsset.objectReferenceValue, sceneName.stringValue);
+                
             }
-#endif
 
             // end
             EditorGUI.EndProperty();

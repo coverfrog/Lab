@@ -10,7 +10,7 @@ namespace Cf.Scenes
         // base info this
         [SerializeField] private Object sceneAsset;
         [SerializeField] private string sceneName;
-        
+
         // get name 
         public string SceneName => sceneName;
         

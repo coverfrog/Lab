@@ -18,6 +18,8 @@ namespace Cf.Scenes
         private void Start()
         {
             StartCoroutine(SceneLoader.AsyncLoad(additiveSceneList, null, null));
+
+           
         }
     }
 }
