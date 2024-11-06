@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.IO;
 using UnityEngine;
 using UnityEditor;
@@ -25,15 +26,18 @@ namespace Cf.Scenes.Editor
             }
             
             // open asset
-            SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(path);
-            
-            // check asset is scene asset file
-            if (sceneAsset == null)
+            AssetImporter importer = AssetImporter.GetAtPath(path);
+
+            // check
+            if (importer == null)
             {
                 return;
             }
             
-            // file edit
+            // add
+            importer.userData = "test log";
         }
     }
 }
+
+#endif
