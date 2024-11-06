@@ -1,4 +1,3 @@
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,9 +29,8 @@ namespace Cf.Scenes.Property
                 return;
             }
 
-            // value scan
-            sceneAsset.objectReferenceValue =
-                EditorGUI.ObjectField(sceneFieldRect, sceneAsset.objectReferenceValue, typeof(SceneAsset), false);
+            // value field
+            sceneAsset.objectReferenceValue = EditorGUI.ObjectField(sceneFieldRect, sceneAsset.objectReferenceValue, typeof(SceneAsset), false);
             
             // reference [ obj type ] is not match 
             if (sceneAsset.objectReferenceValue == null)
