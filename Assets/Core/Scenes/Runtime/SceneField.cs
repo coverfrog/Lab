@@ -7,17 +7,26 @@ namespace Cf.Scenes
     [Serializable]
     public class SceneField
     {
-        // base info this
+        // < base info this >
         [SerializeField] private Object sceneAsset;
         [SerializeField] private string sceneName;
+        
+        // < custom user json >
+        [SerializeField] private string sceneInfoJson;
 
-        // get name 
+        // < get >  
         public string SceneName => sceneName;
         
-        // implicit : change dynamic type , sceneField -> string
+        // < implicit >
         public static implicit operator string(SceneField obj)
         {
             return obj.sceneName;
+        }
+        
+        // write
+        private void Write()
+        {
+            
         }
     }
 }

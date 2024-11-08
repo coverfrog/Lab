@@ -1,7 +1,10 @@
+#if UNITY_EDITOR
+using System;
 using UnityEditor;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace Cf.Scenes.Property
+namespace Cf.Scenes.Editor
 {
     [CustomPropertyDrawer(typeof(SceneField))]
     public class SceneFieldPropertyDrawer : PropertyDrawer
@@ -14,6 +17,7 @@ namespace Cf.Scenes.Property
             // find property
             SerializedProperty sceneAsset = property.FindPropertyRelative("sceneAsset");
             SerializedProperty sceneName = property.FindPropertyRelative("sceneName");
+            SerializedProperty sceneInfoJson = property.FindPropertyRelative("sceneInfoJson");
             
             // position from label
             position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
@@ -23,7 +27,7 @@ namespace Cf.Scenes.Property
             Rect expendBtnRect = new Rect(position.x + position.width - 45, position.y, 45, position.height);
             
             // target [ obj ] when null
-            if (sceneAsset == null)
+            if (sceneAsset == null || sceneName == null || sceneInfoJson == null)
             {
                 EditorGUI.EndProperty();
                 return;
@@ -45,7 +49,7 @@ namespace Cf.Scenes.Property
             // expend button, only editor
             if (GUI.Button(expendBtnRect, "Edit"))
             {
-                
+                SceneFieldJsonEditor.EditorOpen(sceneInfoJson);
             }
 
             // end
@@ -53,3 +57,4 @@ namespace Cf.Scenes.Property
         }
     }
 }
+#endif
