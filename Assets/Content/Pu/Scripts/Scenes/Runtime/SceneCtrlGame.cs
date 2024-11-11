@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cf;
 using UnityEngine;
 using Cf.Scenes;
 
@@ -10,17 +11,13 @@ namespace Pu
     {
         [Header("Debug")] 
         [SerializeField] private MonsterSpawnDataKey debugMonsterSpawnDataKey;
-        
-        [Header("User")]
-        [SerializeField] private GameCountUI gameCountUI;
-        [SerializeField] private MonsterGroup monsterGroup;
 
+        [Header("Test")] 
+        [SerializeField] private PoolHelperField<Monster> poolHelperField;
+        
         protected override IEnumerator Start()
         {
             yield return base.Start();
-
-            _ = gameCountUI.CountDownBegin();
-            _ = monsterGroup.SpawnBegin(debugMonsterSpawnDataKey);
         }
     }
 }
