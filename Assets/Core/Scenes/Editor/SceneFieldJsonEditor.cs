@@ -8,30 +8,23 @@ namespace Cf.Scenes.Editor
 {
     public class SceneFieldJsonEditor : EditorWindow
     {
-        // < value >
-        private static SerializedProperty _jsonPropertyCurrent;
-        private static string _json;
-        
         // < open by menu item >
         [MenuItem("Cf/Scene/Json Editor")]
         public static void EditorOpen()
         {
-            SceneFieldJsonEditor window = GetWindow<SceneFieldJsonEditor>();
-
+            _ = GetWindow<SceneFieldJsonEditor>();
         }
         
         // < open by scene field edit >
-        public static void EditorOpen(SerializedProperty jsonProperty)
+        public static void EditorOpen(SceneField sceneField)
         {
-            _jsonPropertyCurrent = jsonProperty;
-            
             EditorOpen();
         }
 
         // < gui >
         private void OnGUI()
         {
-            
+           
         }
     }
 }

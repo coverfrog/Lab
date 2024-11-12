@@ -49,7 +49,7 @@ namespace Cf.Scenes.Editor
             // expend button, only editor
             if (GUI.Button(expendBtnRect, "Edit"))
             {
-                SceneFieldJsonEditor.EditorOpen(sceneInfoJson);
+                // SceneFieldJsonEditor.EditorOpen(null);
             }
 
             // end

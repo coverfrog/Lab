@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace Cf.Scenes
 {
-    public abstract class SceneCtrl : MonoBehaviour
+    public sealed class SceneCtrl : MonoBehaviour
     {
         [Header("Text")]
         [SerializeField] private string codeName;
@@ -19,7 +19,7 @@ namespace Cf.Scenes
         
         private IEnumerator _coAdditiveLoadStart;
         
-        protected virtual IEnumerator Start()
+        private IEnumerator Start()
         {
             // option check
             if (!isAdditiveLoad)
