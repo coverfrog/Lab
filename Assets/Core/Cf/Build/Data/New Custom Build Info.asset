@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a1ec80464c5fa448a49b912be9d4e0, type: 3}
   m_Name: New Custom Build Info
   m_EditorClassIdentifier: 
-  sceneFields: []
-  localPathName: 
-  assetBundleManifestPath: 
-  targetGroup: 0
-  target: 0
-  subtarget: 0
+  target: 19
   options: 0
+  assetBundleManifestPath: 
+  targetGroup: 1
+  localPathName: 
+  subTarget: 0
   extraScriptingDefines: []
+  sceneFields: []
