@@ -2,32 +2,40 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cf.Util
+namespace Cf
 {
-    public class UtilMath : MonoBehaviour
+    public static partial class Util
     {
-        public static int[] GetNoneOverlapNumbers(int n)
+        public static class Math 
         {
-            return GetNoneOverlapNumbers(n, n);
-        }
-
-        public static int[] GetNoneOverlapNumbers(int maxCount, int n)
-        {
-            var source = new int[maxCount];
-            for (var i = 0; i < maxCount; i++) { source[i] = i; }
-
-            var result = new int[n];
-
-            for (var i = 0; i < n; i++)
+            public static class Ran
             {
-                var pick = Random.Range(0, maxCount);
+                public static int[] GetNoneOverlapNumberArray(int n)
+                {
+                    return GetNoneOverlapNumberArray(n, n);
+                }
 
-                result[i] = source[pick];
-                source[pick] = source[maxCount - 1];
-                maxCount -= 1;
+                public static int[] GetNoneOverlapNumberArray(int maxCount, int n)
+                {
+                    var source = new int[maxCount];
+                    for (var i = 0; i < maxCount; i++) { source[i] = i; }
+
+                    var result = new int[n];
+
+                    for (var i = 0; i < n; i++)
+                    {
+                        var pick = Random.Range(0, maxCount);
+
+                        result[i] = source[pick];
+                        source[pick] = source[maxCount - 1];
+                        maxCount -= 1;
+                    }
+
+                    return result;
+                }
             }
-
-            return result;
         }
     }
+
+ 
 }
