@@ -13,7 +13,7 @@ namespace Pu
     [CreateAssetMenu(menuName = "Fu/Game/Game Info", fileName = "Game Info")]
     public class GameInfo : ScriptableObject
     {
-        [Title("Text")]
+        [Title("")]
         [SerializeField] private GameType gameType;
 
         public GameInfo Clone()

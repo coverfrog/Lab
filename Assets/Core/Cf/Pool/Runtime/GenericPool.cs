@@ -1,78 +1,105 @@
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Cf
 {
-    public abstract class GenericPool<TInfo, TBehavior> : MonoBehaviour where TInfo : GenericPoolInfo<TBehavior> where TBehavior : Behaviour
-    {
-        [Title("")]
-        [SerializeField] private bool collectionChecks;
+    public abstract class GenericPool<T> : MonoBehaviour where T : Behaviour
+    { 
+        protected enum PoolType
+        {
+            Stack,
+            LinkedList,
+        }
 
-        [SerializeField] [Range(10, int.MaxValue)] private int defaultCapacity = 10;
-        [SerializeField] [Range(1, int.MaxValue)] private int maxPoolSize = 20;
+        [Title("T")] 
+        [SerializeField] protected T prefab;
         
-        [Title("")]
-        [ShowInInspector] [ReadOnly] private ObjectPool<TBehavior> _pool;
+        [Title("Option")] 
+        [SerializeField] protected PoolType poolType;
+        [SerializeField] protected bool collectionChecks;
+        [SerializeField] [Range(0, 100_000)] [ShowIf("IsTypeStack")] protected int defaultCapacity = 10;
+        [SerializeField] [Range(0, 100_000)] protected int maxPoolSize = 10_000;
+
+        #region < Condition >
+
+        private bool IsTypeStack => poolType == PoolType.Stack;
         
-        private IObjectPool<TBehavior> Pool
+        private bool IsTypeLinkedList => poolType == PoolType.LinkedList;
+
+        private bool IsPrefabExist => prefab != null;
+
+        #endregion
+
+        #region < Pool >
+
+        private IObjectPool<T> _pool;
+
+        public IObjectPool<T> Pool
         {
             get
             {
-                if (_pool != null)
+                if (_pool == null)
                 {
-                    return _pool;
+                    switch (poolType)
+                    {
+                        case PoolType.Stack:
+                            _pool = new ObjectPool<T>(CreatePooledItem, OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, collectionChecks, defaultCapacity, maxPoolSize);
+                            break;
+                        case PoolType.LinkedList:
+                            _pool = new LinkedPool<T>(CreatePooledItem, OnTakeFromPool, OnReturnedToPool, OnDestroyPoolObject, collectionChecks, maxPoolSize);
+                            break;
+                        default:
+                            _pool = null;
+                            break;
+                    }
                 }
 
-                _pool = new ObjectPool<TBehavior>(
-                    CreatePooledItem, 
-                    OnTakeFromPool, 
-                    OnReturnedToPool,
-                    OnDestroyPoolObject,
-                    collectionChecks, 
-                    defaultCapacity, 
-                    maxPoolSize);
-                
                 return _pool;
             }
         }
+
+        #endregion
+
+        #region < Method >
+
+        private T CreatePooledItem()
+        {
+            T item = Instantiate(prefab);
+            IReturnPool<T> returnPool = item.GetComponent<IReturnPool<T>>();
+
+            if (returnPool != null)
+            {
+                returnPool.Pool = Pool;
+            }
+
+            else
+            {
+#if UNITY_EDITOR
+                Debug.LogError($"{prefab.name} Is Not Contain {nameof(IReturnPool<T>)} !!!");
+#endif
+            }
+
+            return item;
+        }
         
-        private TBehavior CreatePooledItem()
+        private void OnReturnedToPool(T t)
         {
-            // var go = new GameObject("Pooled Particle System");
-            // var ps = go.AddComponent<ParticleSystem>();
-            // ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
-            //
-            // var main = ps.main;
-            // main.duration = 1;
-            // main.startLifetime = 1;
-            // main.loop = false;
-            //
-            // // This is used to return ParticleSystems to the pool when they have stopped.
-            // var returnToPool = go.AddComponent<ReturnToPool>();
-            // returnToPool.pool = Pool;
-
-            return null;
+            t.gameObject.SetActive(false);
         }
 
-        // Called when an item is returned to the pool using Release
-        private void OnReturnedToPool(TBehavior tBehavior)
+        private void OnTakeFromPool(T t)
         {
-            tBehavior.gameObject.SetActive(false);
+            t.gameObject.SetActive(transform);
         }
 
-        // Called when an item is taken from the pool using Get
-        private void OnTakeFromPool(TBehavior tBehavior)
+        private void OnDestroyPoolObject(T t)
         {
-            tBehavior.gameObject.SetActive(true);
+            Destroy(t.gameObject);
         }
 
-        // If the pool capacity is reached then any items returned will be destroyed.
-        // We can control what the destroy behavior does, here we destroy the GameObject.
-        void OnDestroyPoolObject(TBehavior system)
-        {
-            Destroy(system.gameObject);
-        }
+        #endregion
+
     }
 }

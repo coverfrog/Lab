@@ -9,12 +9,15 @@ namespace Pu
     public class Game : MonoBehaviour
     {
         [Title("Info")]
-        [SerializeField] [ReadOnly] [InlineEditor(InlineEditorModes.FullEditor)] private GameInfo selectedInfo;
+        [SerializeField] private GameInfo selectedInfo;
         [SerializeField] private List<GameInfo> infoList;
 
         private IEnumerator Start()
         {
-            selectedInfo = infoList[0].Clone();
+            if (selectedInfo == null)
+            {
+                selectedInfo = infoList[0].Clone();
+            }
             
             yield return null;
         }

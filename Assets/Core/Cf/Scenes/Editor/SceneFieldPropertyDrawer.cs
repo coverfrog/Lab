@@ -17,17 +17,15 @@ namespace Cf.Scenes.Editor
             // find property
             SerializedProperty sceneAsset = property.FindPropertyRelative("sceneAsset");
             SerializedProperty sceneName = property.FindPropertyRelative("sceneName");
-            SerializedProperty sceneInfoJson = property.FindPropertyRelative("sceneInfoJson");
             
             // position from label
             position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
             
             // define rect by position
             Rect sceneFieldRect = new Rect(position.x, position.y, position.width - 50, position.height);
-            Rect expendBtnRect = new Rect(position.x + position.width - 45, position.y, 45, position.height);
             
             // target [ obj ] when null
-            if (sceneAsset == null || sceneName == null || sceneInfoJson == null)
+            if (sceneAsset == null || sceneName == null)
             {
                 EditorGUI.EndProperty();
                 return;
@@ -45,12 +43,6 @@ namespace Cf.Scenes.Editor
             
             // value paste
             sceneName.stringValue = sceneAsset.objectReferenceValue.name;
-            
-            // expend button, only editor
-            if (GUI.Button(expendBtnRect, "Edit"))
-            {
-                // SceneFieldJsonEditor.EditorOpen(null);
-            }
 
             // end
             EditorGUI.EndProperty();
