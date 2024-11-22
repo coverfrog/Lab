@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -7,29 +8,80 @@ namespace Cf
 {
     public abstract class GenericPool<T> : MonoBehaviour where T : Behaviour
     { 
-        protected enum PoolType
+        [TitleGroup("T")] 
+        [SerializeField] protected T prefab;
+
+        [Title("Option")] 
+        [SerializeField] protected PoolOptions options;
+
+        #region < Unity >
+
+        private void Awake()
         {
-            Stack,
-            LinkedList,
+            _ = Pool;
         }
 
-        [Title("T")] 
-        [SerializeField] protected T prefab;
+        #endregion
         
-        [Title("Option")] 
-        [SerializeField] protected PoolType poolType;
-        [SerializeField] protected bool collectionChecks;
-        [SerializeField] [Range(0, 100_000)] [ShowIf("IsTypeStack")] protected int defaultCapacity = 10;
-        [SerializeField] [Range(0, 100_000)] protected int maxPoolSize = 10_000;
+        #region < Check Prefab >
 
-        #region < Condition >
-
-        private bool IsTypeStack => poolType == PoolType.Stack;
+#if UNITY_EDITOR
+        [TitleGroup("T")]
+        [ShowInInspector]
+        public bool PrefabCanUse =>  PrefabCanUseT(prefab);
         
-        private bool IsTypeLinkedList => poolType == PoolType.LinkedList;
+        private bool PrefabCanUseT(T t)
+        {
+            bool isCaneUse;
+            
+            if (t == null)
+            {
+                isCaneUse = false;
+            }
 
-        private bool IsPrefabExist => prefab != null;
+            else if (t.GetComponent<IReturnPool<T>>() == null)
+            {
+                isCaneUse = false;
+            }
 
+            else
+            {
+                isCaneUse = true;
+            }
+
+            return isCaneUse;
+        }
+        
+        [HideIf("PrefabCanUse")]
+        [TitleGroup("T")]
+        [Button]
+        public void LogPrefabException()
+        {
+            LogPrefabExceptionT(prefab);
+        }
+        
+        private void LogPrefabExceptionT(T t)
+        {
+            string message;
+            
+            if (t == null)
+            {
+                message = $"<color=red>Prefab is null.</color>";
+            }
+
+            else if (t.GetComponent<IReturnPool<T>>() == null)
+            {
+                message = $"<color=red>Prefab is not inherit _IReturnPool<T>.</color>";
+            }
+
+            else
+            {
+                message = $"<color=green>Good!</color>";
+            }
+
+            Debug.Log(message);
+        }
+#endif
         #endregion
 
         #region < Pool >
@@ -40,8 +92,19 @@ namespace Cf
         {
             get
             {
+                if (options == null)
+                {
+                    options = ScriptableObject.CreateInstance<PoolOptions>();
+                    options.name = "Default Stack";
+                }
+
                 if (_pool == null)
                 {
+                    PoolType poolType = options.GetPoolType;
+                    bool collectionChecks = options.GetCollectionChecks;
+                    int defaultCapacity = options.GetDefaultCapacity;
+                    int maxPoolSize = options.GetMaxPoolSize;
+                    
                     switch (poolType)
                     {
                         case PoolType.Stack:
@@ -62,44 +125,86 @@ namespace Cf
 
         #endregion
 
-        #region < Method >
+        #region < Factory >
 
-        private T CreatePooledItem()
+        private void SetPrefab(T t)
         {
-            T item = Instantiate(prefab);
-            IReturnPool<T> returnPool = item.GetComponent<IReturnPool<T>>();
+            prefab = t;
+        }
 
-            if (returnPool != null)
+        private void SetOptions(PoolOptions pOptions)
+        {
+            options = pOptions;
+        }
+
+        public static bool CreatePool<TPool>(GameObject obj, T targetPrefab, PoolOptions options, out TPool tPool) where TPool : GenericPool<T>
+        {
+            TPool pool = obj.AddComponent<TPool>();
+
+            if (pool == null)
             {
-                returnPool.Pool = Pool;
+                tPool = null;
+#if UNITY_EDITOR
+                Debug.Log("Pool is null");
+#endif
+                return false;
             }
 
-            else
+            bool prefabCanUse = pool.PrefabCanUseT(targetPrefab);
+            if (!prefabCanUse)
+            {
+                tPool = null;
+                return false;
+            }
+            
+            pool.SetPrefab(targetPrefab);
+            if (options != null)
+            {
+                pool.SetOptions(options);
+            }
+
+            tPool = pool;
+            
+            return true;
+        }
+
+        #endregion
+
+        #region < Method >
+
+        protected virtual T CreatePooledItem()
+        {
+            if (!PrefabCanUse)
             {
 #if UNITY_EDITOR
                 Debug.LogError($"{prefab.name} Is Not Contain {nameof(IReturnPool<T>)} !!!");
 #endif
+                return null;
             }
+
+            T item = Instantiate(original: prefab, parent: transform);
+            IReturnPool<T> returnPool = item.GetComponent<IReturnPool<T>>();
+
+            returnPool.Pool = Pool;
 
             return item;
         }
         
-        private void OnReturnedToPool(T t)
+        protected virtual void OnReturnedToPool(T t)
         {
             t.gameObject.SetActive(false);
         }
 
-        private void OnTakeFromPool(T t)
+        protected virtual void OnTakeFromPool(T t)
         {
             t.gameObject.SetActive(transform);
         }
 
-        private void OnDestroyPoolObject(T t)
+        protected virtual void OnDestroyPoolObject(T t)
         {
             Destroy(t.gameObject);
         }
 
         #endregion
-
     }
 }

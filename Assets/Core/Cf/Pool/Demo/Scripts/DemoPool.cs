@@ -8,7 +8,7 @@ namespace Cf.PoolDemo
 {
     public class DemoPool : GenericPool<DemoBehaviour>
     {
-        [Title("Action")]
+        [Title("Demo")]
         [Button]
         private void Create()
         {
