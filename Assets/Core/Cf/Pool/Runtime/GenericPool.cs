@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
+using Object = UnityEngine.Object;
 
 namespace Cf
 {
@@ -10,8 +11,7 @@ namespace Cf
     { 
         [TitleGroup("T")] 
         [SerializeField] protected T prefab;
-
-        [Title("Option")] 
+        [TitleGroup("T")] 
         [SerializeField] protected PoolOptions options;
 
         #region < Unity >
@@ -22,7 +22,7 @@ namespace Cf
         }
 
         #endregion
-        
+
         #region < Check Prefab >
 
 #if UNITY_EDITOR
@@ -55,12 +55,12 @@ namespace Cf
         [HideIf("PrefabCanUse")]
         [TitleGroup("T")]
         [Button]
-        public void LogPrefabException()
+        public void ErrorReport()
         {
-            LogPrefabExceptionT(prefab);
+            ErrorReportT(prefab);
         }
         
-        private void LogPrefabExceptionT(T t)
+        private void ErrorReportT(T t)
         {
             string message;
             
@@ -137,40 +137,44 @@ namespace Cf
             options = pOptions;
         }
 
-        public static bool CreatePool<TPool>(GameObject obj, T targetPrefab, PoolOptions options, out TPool tPool) where TPool : GenericPool<T>
+        public static TPool CreatePool<TPool>(Object sender, PoolInfo info, Transform parent) where TPool : GenericPool<T>
         {
-            TPool pool = obj.AddComponent<TPool>();
+            TPool pool = new GameObject("").AddComponent<TPool>();
+            pool.name = $"Pool_{info.CodeName}";
 
             if (pool == null)
             {
-                tPool = null;
 #if UNITY_EDITOR
                 Debug.Log("Pool is null");
 #endif
-                return false;
+                Destroy(pool.gameObject);
+                
+                return pool;
             }
 
-            bool prefabCanUse = pool.PrefabCanUseT(targetPrefab);
-            if (!prefabCanUse)
-            {
-                tPool = null;
-                return false;
-            }
-            
-            pool.SetPrefab(targetPrefab);
-            if (options != null)
-            {
-                pool.SetOptions(options);
-            }
+            T t = info.Prefab.GetComponent<T>();
+            PoolOptions options = info.Options; 
 
-            tPool = pool;
+            if (!pool.PrefabCanUseT(t) || options == null)
+            {
+#if UNITY_EDITOR
+                Debug.Log("Prefab is null IReturnPool or Options");
+#endif
+                Destroy(pool.gameObject);
+                
+                return pool;
+            }
             
-            return true;
+            pool.SetPrefab(t);
+            pool.SetOptions(options);
+            pool.transform.SetParent(parent);
+
+            return pool;
         }
 
         #endregion
 
-        #region < Method >
+        #region < Interface >
 
         protected virtual T CreatePooledItem()
         {
