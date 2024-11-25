@@ -20,5 +20,8 @@ namespace Cf
             // Obb
                 // * check obb col between A,B
                 // * check obb col in List
+                
+        // Singleton
+            // Mono
     }
 }

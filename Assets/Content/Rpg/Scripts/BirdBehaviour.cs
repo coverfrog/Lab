@@ -1,19 +1,26 @@
+using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Cf
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class BirdBehaviour : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        [Title("Action")]
+        [SerializeField] private MoveAction moveAction;
+
+        private Rigidbody _rBody;
+        private Vector3? _moveEndPoint;
+
+        private void Awake()
         {
-        
+            _rBody = GetComponent<Rigidbody>();
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-        
+            moveAction.ToUpdate(ref _rBody, ref _moveEndPoint, 1.0f);
         }
     }
 }

@@ -158,7 +158,7 @@ namespace Cf
             if (!pool.PrefabCanUseT(t) || options == null)
             {
 #if UNITY_EDITOR
-                Debug.Log("Prefab is null IReturnPool or Options");
+                Debug.Log("Prefab is null IReturnPool or Options or Type Miss");
 #endif
                 Destroy(pool.gameObject);
                 
