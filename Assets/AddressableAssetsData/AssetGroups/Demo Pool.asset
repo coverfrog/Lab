@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Demo Pool
+  m_EditorClassIdentifier: 
+  m_GroupName: Demo Pool
+  m_GUID: 5f02eb4b191b0254095d4edf39628b5b
+  m_SerializeEntries:
+  - m_GUID: 12229a654f2619247b0cfd35beb2dc17
+    m_Address: Assets/Core/Cf/Pool/_Demo/Prefabs/Pool Demo Manager.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 5c015aa7276e8c745a5b09d6bb33ea09, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 7e38a2af10ee4a047a81a31bd5ced58e, type: 2}
+    - {fileID: 11400000, guid: f9a8dcd678d1d084798dadf8d16888cf, type: 2}

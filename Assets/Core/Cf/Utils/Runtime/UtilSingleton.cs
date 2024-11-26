@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace Cf
 {
@@ -42,7 +44,7 @@ namespace Cf
                 }
 
                 protected abstract bool IsDontDestroyOnLoad();
-
+                
                 protected virtual void Awake()
                 {
                     if (_instance == null)
@@ -60,12 +62,12 @@ namespace Cf
                     }
                 }
 
-                protected void OnApplicationQuit()
+                protected virtual void OnApplicationQuit()
                 {
                     _isClose = true;
                 }
 
-                private void OnDestroy()
+                protected virtual void OnDestroy()
                 {
                     _isClose = true;
                 }

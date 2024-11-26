@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Cf.PoolDemo
 {
-    public class DemoPool : GenericPool<DemoBehaviour>
+    public class DemoPool : PoolBase<DemoBehaviour>
     {
         [Title("Demo")]
         [Button]
