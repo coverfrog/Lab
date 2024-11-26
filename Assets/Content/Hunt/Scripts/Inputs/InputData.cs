@@ -13,29 +13,42 @@ namespace Rpg
         public void Bind(ref PlayerInput playerInput)
         {
             _playerInput = playerInput;
-            _playerInput.ac
 
-            int missCount = 0;
-            
             if (_playerInput.actions["Move"] is { name: "Move" } moveAct)
             {
-                Debug.Log("Bind Success");
-            }
+                moveAct.performed -= OnMovePerformed;
+                moveAct.performed += OnMovePerformed;
 
-            else
-            {
-                missCount++;
+                moveAct.canceled -= OnMoveCanceled;
+                moveAct.canceled += OnMoveCanceled;
             }
+        }
 
-            if (missCount > 0)
-            {
-                Debug.LogError($"Bind Miss Count");
-            }
+        private void OnMovePerformed(InputAction.CallbackContext context)
+        {
+            Vector2 dir = context.ReadValue<Vector2>();
+            
+            MoveDirNormal = new Vector3(dir.x, 0, dir.y);
+        }
+
+        private void OnMoveCanceled(InputAction.CallbackContext context)
+        {
+            MoveDirNormal = Vector3.zero;
         }
 
         public void UnBind()
         {
-            
+            if (_playerInput == null)
+            {
+                return;
+            }
+
+            foreach (InputAction ia in _playerInput.actions)
+            {
+                ia.started -= null;
+                ia.performed -= null;
+                ia.canceled -= null;
+            }
         }
     }
 }

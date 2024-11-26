@@ -9,7 +9,20 @@ namespace Rpg
     [RequireComponent(typeof(PlayerInput))]
     public class InputManager : Util.Singleton.Mono<InputManager>
     {
-        public static InputData Data { get; private set; }
+        private static InputData _data;
+
+        public static InputData Data
+        {
+            get
+            {
+                if (!_data)
+                {
+                    _ = Instance;
+                }
+
+                return _data;
+            }
+        }
 
         private PlayerInput _playerInput;
 
@@ -24,7 +37,7 @@ namespace Rpg
         {
             base.Awake();
 
-            Data = 
+            _data = 
                 ScriptableObject.CreateInstance<InputData>();
 
             _playerInput = 
@@ -63,18 +76,6 @@ namespace Rpg
             }
             
             Data.UnBind();
-        }
-
-        private void Update()
-        {
-            if (IsNull)
-            {
-                return;
-            }
-        }
-
-        void OnMove()
-        {
         }
     }
 }
