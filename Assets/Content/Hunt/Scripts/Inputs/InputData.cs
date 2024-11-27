@@ -8,6 +8,8 @@ namespace Rpg
     {
         public Vector3 MoveDirNormal { get; private set; }
 
+        public bool IsMoveInput => MoveDirNormal.magnitude > 0;
+
         private PlayerInput _playerInput;
 
         public void Bind(ref PlayerInput playerInput)

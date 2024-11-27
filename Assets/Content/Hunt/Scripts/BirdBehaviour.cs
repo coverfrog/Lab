@@ -1,4 +1,5 @@
 using System;
+using Cf;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -7,11 +8,20 @@ namespace Rpg
     [RequireComponent(typeof(Rigidbody))]
     public class BirdBehaviour : MonoBehaviour
     {
+        private InputData _inputData;
+        
+        private void Start()
+        {
+            _inputData = InputManager.Data;
+        }
+
         private void Update()
         {
-            if (InputManager.Data.MoveDirNormal.magnitude > 0)
+            if (_inputData.IsMoveInput)
             {
-                transform.position += InputManager.Data.MoveDirNormal * (1.0f * Time.deltaTime);
+                transform.position += _inputData.MoveDirNormal * (1.0f * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation,
+                    Quaternion.LookRotation(_inputData.MoveDirNormal), 10.0f * Time.deltaTime);
             }
         }
     }
