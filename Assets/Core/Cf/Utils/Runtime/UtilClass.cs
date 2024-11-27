@@ -49,16 +49,23 @@ namespace Cf
 
             public static string[] FindSubClassNames<T>() where T : class
             {
-                return FindSubClassTypes<T>()
+                Type baseType = typeof(T);
+
+                return FindSubClassNames(baseType);
+            }
+            
+            public static string[] FindSubClassFullNames(Type baseType)
+            {
+                return FindSubClassTypes(baseType)
                     .Select(t => t.Name)
                     .ToArray();
             }
 
             public static string[] FindSubClassFullNames<T>() where T : class
             {
-                return FindSubClassTypes<T>()
-                    .Select(t => t.FullName)
-                    .ToArray();
+                Type baseType = typeof(T);
+
+                return FindSubClassFullNames(baseType);
             }
             
         }

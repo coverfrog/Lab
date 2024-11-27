@@ -21,9 +21,6 @@ namespace Cf.Scenes.Editor
             // position from label
             position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
             
-            // define rect by position
-            Rect sceneFieldRect = new Rect(position.x, position.y, position.width - 50, position.height);
-            
             // target [ obj ] when null
             if (sceneAsset == null || sceneName == null)
             {
@@ -32,7 +29,7 @@ namespace Cf.Scenes.Editor
             }
 
             // value field
-            sceneAsset.objectReferenceValue = EditorGUI.ObjectField(sceneFieldRect, sceneAsset.objectReferenceValue, typeof(SceneAsset), false);
+            sceneAsset.objectReferenceValue = EditorGUI.ObjectField(position, sceneAsset.objectReferenceValue, typeof(SceneAsset), false);
             
             // reference [ obj type ] is not match 
             if (sceneAsset.objectReferenceValue == null)

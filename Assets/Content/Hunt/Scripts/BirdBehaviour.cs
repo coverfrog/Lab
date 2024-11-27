@@ -8,6 +8,8 @@ namespace Rpg
     [RequireComponent(typeof(Rigidbody))]
     public class BirdBehaviour : MonoBehaviour
     {
+        [SerializeField] private ValueDropField<MoveAct> moveAct;
+        
         private InputData _inputData;
         
         private void Start()
