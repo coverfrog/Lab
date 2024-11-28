@@ -811,8 +811,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4420917043950589827}
   - component: {fileID: 2220162932930688088}
-  - component: {fileID: 406918600094021523}
+  - component: {fileID: 7521276416512780612}
   - component: {fileID: 8219440981254801058}
+  - component: {fileID: 406918600094021523}
   m_Layer: 0
   m_Name: Bird
   m_TagString: Untagged
@@ -850,28 +851,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6125038c6794d3f4581f0646357de4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &406918600094021523
-Animator:
-  serializedVersion: 7
+--- !u!114 &7521276416512780612
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7949195077262836748}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fffc63b4d824a3547b12ff320521ba9a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8476638c8b36b1148a4d0373e54bb6ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveAct: {fileID: 11400000, guid: ed8d06c88c785ed45a6856bc75a3b85a, type: 2}
 --- !u!54 &8219440981254801058
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -899,6 +891,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &406918600094021523
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949195077262836748}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: fffc63b4d824a3547b12ff320521ba9a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8750831196873946878
 GameObject:
   m_ObjectHideFlags: 0

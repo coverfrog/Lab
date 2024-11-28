@@ -6,8 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Content/Pu/Scenes/Pu.unity
-    guid: ecb04b860da82fc49b1c2f54bfffab35
+    path: Assets/Content/AirPass/Scenes/100_Title.unity
+    guid: 336a9b71a87932b4488d3ecfdeea4685
+  - enabled: 1
+    path: Assets/Content/AirPass/Scenes/101_ConceptVideo.unity
+    guid: fc7e38637cb0add4895721a43b7c448d
+  - enabled: 1
+    path: Assets/Content/AirPass/Scenes/102_Tutorial.unity
+    guid: 41405d728a09b554f8c535b5d144ee9f
+  - enabled: 1
+    path: Assets/Content/AirPass/Scenes/200_Fade.unity
+    guid: 5406758be344db144a5cbc06cd4f07bd
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 0f0772bbb14c1cf4dada7837df4137f8, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 6fc0d14a34214554c8498f16eb431be9, type: 2}

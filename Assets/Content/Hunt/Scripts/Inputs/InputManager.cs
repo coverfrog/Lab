@@ -9,22 +9,9 @@ namespace Rpg
     [RequireComponent(typeof(PlayerInput))]
     public class InputManager : Util.Singleton.Mono<InputManager>
     {
-        private static InputData _data;
-
-        public static InputData Data
-        {
-            get
-            {
-                if (!_data)
-                {
-                    _ = Instance;
-                }
-
-                return _data;
-            }
-        }
-
         private PlayerInput _playerInput;
+        
+        public InputData Data { get; private set; }
 
         protected override bool IsDontDestroyOnLoad()
         {
@@ -37,7 +24,7 @@ namespace Rpg
         {
             base.Awake();
 
-            _data = 
+            Data = 
                 ScriptableObject.CreateInstance<InputData>();
 
             _playerInput = 
@@ -50,8 +37,8 @@ namespace Rpg
             {
                 return;
             }
-            
-            Data.Bind(ref _playerInput);
+
+            Data?.Bind(ref _playerInput);
         }
 
         protected override void OnApplicationQuit()
@@ -63,7 +50,7 @@ namespace Rpg
                 return;
             }
             
-            Data.UnBind();
+            Data?.UnBind();
         }
 
         protected override void OnDestroy()
@@ -75,7 +62,7 @@ namespace Rpg
                 return;
             }
             
-            Data.UnBind();
+            Data?.UnBind();
         }
     }
 }

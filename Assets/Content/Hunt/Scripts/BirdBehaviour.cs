@@ -1,30 +1,26 @@
 using System;
+using System.Collections;
 using Cf;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Rpg
 {
-    [RequireComponent(typeof(Rigidbody))]
+ 
+    [RequireComponent(typeof(Animator))]
     public class BirdBehaviour : MonoBehaviour
     {
-        [SerializeField] private ValueDropField<MoveAct> moveAct;
+        private Rigidbody _rBody;
+        private Animator _animator;
         
-        private InputData _inputData;
-        
-        private void Start()
-        {
-            _inputData = InputManager.Data;
-        }
+        private MoveBehaviour _moveBehaviour;
 
-        private void Update()
+        private void Awake()
         {
-            if (_inputData.IsMoveInput)
-            {
-                transform.position += _inputData.MoveDirNormal * (1.0f * Time.deltaTime);
-                transform.rotation = Quaternion.Slerp(transform.rotation,
-                    Quaternion.LookRotation(_inputData.MoveDirNormal), 10.0f * Time.deltaTime);
-            }
+            _rBody = GetComponent<Rigidbody>();
+            _animator = GetComponent<Animator>();
+
+            _moveBehaviour = GetComponent<MoveBehaviour>();
         }
     }
 }

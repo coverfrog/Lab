@@ -1,8 +1,9 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Cf.Scenes
+namespace Cf
 {
     [Serializable]
     public class SceneField
@@ -16,6 +17,8 @@ namespace Cf.Scenes
 
         // < get >  
         public string SceneName => sceneName;
+
+        public SceneAsset SceneAsset => (SceneAsset)sceneAsset;
         
         // < implicit >
         public static implicit operator string(SceneField obj)

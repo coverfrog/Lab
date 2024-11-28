@@ -1,13 +1,17 @@
+using System;
+using System.Collections.Generic;
+using Cf;
 using UnityEngine;
+using Sirenix.OdinInspector;
 
-namespace Cf
+namespace AirPass
 {
     public enum SceneType 
     {
-        Main = 0,
-        Title = 100,
+        Main = 0_000,
+        Title = 10_000,
         ConceptVideo,
         Tutorial,
-        Fade = 200,
+        Fade = 20_000,
     }
 }
