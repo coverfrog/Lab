@@ -16,6 +16,8 @@ namespace Cf
         protected abstract bool IsMoveInput { get; }
         
         protected abstract Vector3 GetMoveDirNormal { get; }
+        
+        protected abstract float GetMoveSpeed { get; }
 
         protected virtual void Awake()
         {
@@ -24,18 +26,23 @@ namespace Cf
 
         protected virtual void Update()
         {
+            if (!moveAct || !_rBody)
+            {
+                return;
+            }
+            
             if (IsMoveInput)
             {
                 if (_isMoving)
                 {
-                    moveAct.Moving(this, _rBody, GetMoveDirNormal, 1.0f);
+                    moveAct.Moving(this, _rBody, GetMoveDirNormal, GetMoveSpeed);
                 }
 
                 else
                 {
                     _isMoving = true;
                     
-                    moveAct.MoveBegin(this, _rBody, GetMoveDirNormal, 1.0f);
+                    moveAct.MoveBegin(this, _rBody, GetMoveDirNormal, GetMoveSpeed);
                 }
             }
 

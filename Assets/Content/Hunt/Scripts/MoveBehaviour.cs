@@ -9,6 +9,7 @@ namespace Rpg
         protected override bool IsMoveInput => _inputData.IsMoveInput;
 
         protected override Vector3 GetMoveDirNormal => _inputData.MoveDirNormal;
+        protected override float GetMoveSpeed => 1.0f;
 
         protected void Start()
         {

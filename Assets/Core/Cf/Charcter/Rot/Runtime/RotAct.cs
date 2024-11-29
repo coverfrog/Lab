@@ -2,18 +2,10 @@ using UnityEngine;
 
 namespace Cf
 {
-    public class RotAct : MonoBehaviour
+    public abstract class RotAct : ScriptableObject
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        public abstract void RotateBegin(Object sender, Rigidbody rBody, Vector3 dir, float speed);
+        public abstract void Rotating(Object sender, Rigidbody rBody, Vector3 dir, float speed);
+        public abstract void RotateEnd(Object sender, Rigidbody rBody);
     }
 }
