@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace Cf
 {
-    public class NewMonoBehaviourScript1 : MonoBehaviour
+    public class Bird : MonoBehaviour
     {
         private void Start()
         {
-            _ = NewMonoBehaviourScript.Instance;
+            _ = InputManager.Instance;
         }
     }
 }
