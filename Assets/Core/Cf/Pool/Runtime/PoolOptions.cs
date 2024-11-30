@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Sirenix.OdinInspector;
 
 namespace Cf
 {
@@ -10,7 +9,7 @@ namespace Cf
         [SerializeField] protected PoolType poolType = PoolType.Stack;
         [SerializeField] protected bool collectionChecks = true;
         [SerializeField] protected int maxPoolSize = 10_000;
-        [SerializeField] [ShowIf("IsTypeStack")] protected int defaultCapacity = 10;
+        [SerializeField] protected int defaultCapacity = 10;
 
         #region < Get >
 

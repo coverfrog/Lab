@@ -1,5 +1,4 @@
 using System;
-using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Cf
@@ -7,11 +6,11 @@ namespace Cf
     [CreateAssetMenu(menuName = "Cf/Pool/Pool Info/Info")]
     public class PoolInfo : ScriptableObject
     {
-        [Title("Text")]
+        [Header("")]
         [SerializeField] private string codeName;
         [SerializeField] [TextArea] private string description;
         
-        [Title("T")] 
+        [Header("")]
         [SerializeField] private Behaviour prefab;
         [SerializeField] private PoolOptions options;
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
@@ -10,9 +9,7 @@ namespace Cf
 {
     public abstract class PoolBase<T> : MonoBehaviour where T : Behaviour
     { 
-        [TitleGroup("T")] 
         [SerializeField] protected T prefab;
-        [TitleGroup("T")] 
         [SerializeField] protected PoolOptions options;
 
         public bool IsInit { get; private set; }
