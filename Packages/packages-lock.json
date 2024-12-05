@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "com.coverfrog.steamworks": {
-      "version": "https://github.com/coverfrog/SteamWorks.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "b9fbafcdf1f0355584ecd411253286b63c7275eb"
-    },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
       "depth": 0,
