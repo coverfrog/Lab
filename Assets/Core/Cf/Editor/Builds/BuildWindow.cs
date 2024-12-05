@@ -438,6 +438,11 @@ namespace Cf
                 }
             }
 
+            if (_inSceneListBuildTargetIndexes.Length <= 0)
+            {
+                return;
+            }
+
             string str = _inSceneListBuildTargetIndexes
                 .Select(b => b.ToString())
                 .Aggregate((s0, s) => s0 += $"_{s}")
