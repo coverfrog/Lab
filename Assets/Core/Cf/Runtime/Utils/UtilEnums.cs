@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Cf
+namespace Cf.Utils
 {
     public static partial class Util
     {

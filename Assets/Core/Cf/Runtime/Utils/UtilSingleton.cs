@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 
-namespace Cf
+namespace Cf.Utils
 {
     public static partial class Util
     {

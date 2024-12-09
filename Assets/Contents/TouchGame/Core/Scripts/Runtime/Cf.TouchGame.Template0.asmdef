@@ -1,0 +1,17 @@
+{
+    "name": "Cf.TouchGame.Template0",
+    "rootNamespace": "Cf.TouchGame.Template0",
+    "references": [
+        "GUID:292de93d177fb23459f1b6a5cf16b02f",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

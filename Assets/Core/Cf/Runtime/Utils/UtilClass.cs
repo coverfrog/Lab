@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace Cf
+namespace Cf.Utils
 {
     public static partial class Util
     {
