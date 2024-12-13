@@ -10,7 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31625cd5d19b16849bd07dd6576ea524, type: 3}
-  m_Name: Score_ 4
+  m_Name: Score_TripleBogey
   m_EditorClassIdentifier: 
-  scoreName: 0
+  scoreName: 6
+  scoreValue: 3
   description: 

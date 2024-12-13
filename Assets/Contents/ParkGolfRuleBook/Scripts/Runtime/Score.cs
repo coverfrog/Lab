@@ -9,13 +9,6 @@ namespace ParkGolf
         [SerializeField] private int scoreValue;
         [SerializeField] [TextArea(10, 20)] private string description;
 
-        public int ScoreValue => scoreValue;
-
-        public static implicit operator int(Score score)
-        {
-            return score.scoreValue;
-        }
-
         public static implicit operator ScoreName(Score score)
         {
             return score.scoreName;
