@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Content/TouchGame/Scenes/Title 1.unity
     guid: f7de51f3541e36d498d078e2298951c9
-  - enabled: 1
+  - enabled: 0
     path: Assets/Content/TouchGame/Scenes/Title 2.unity
     guid: 5ed012ed9bb0ef846b18372b074adf52
-  - enabled: 1
+  - enabled: 0
     path: Assets/Content/TouchGame/Scenes/Title 3.unity
     guid: 891492c49817f0e429ab648acab16e3e
   m_configObjects:

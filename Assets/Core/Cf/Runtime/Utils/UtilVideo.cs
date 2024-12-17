@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
-namespace Cf.Utils
+namespace Cf
 {
     public static partial class Util
     {

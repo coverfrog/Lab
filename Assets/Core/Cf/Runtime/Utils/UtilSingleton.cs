@@ -3,7 +3,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEngine;
 
-namespace Cf.Utils
+namespace Cf
 {
     public static partial class Util
     {
