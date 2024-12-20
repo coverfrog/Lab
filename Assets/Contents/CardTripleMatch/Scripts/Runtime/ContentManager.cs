@@ -1,29 +1,31 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace Cf.Rpg
+namespace Cf.CardTripleMatch
 {
+    public enum ContentType
+    {
+        Intro,
+        Game,
+    }
+    
     public class ContentManager : Util.Singleton.Mono<ContentManager>
     {
-        private IEnumerator _coContent;
+        private IEnumerator _coRunner;
 
         protected override bool IsDontDestroyOnLoad()
         {
             return true;
         }
 
-        public void Init()
-        {
-            if (_coContent != null) StopCoroutine(_coContent);
-
-            _coContent = null;
-        }
+        #region < Content >
 
         public void ContentBegin(Object sender, ContentType contentType, out Func<bool> isRun)
         {
-            if (_coContent != null)
+            if (_coRunner != null)
             {
 #if UNITY_EDITOR
                 Debug.Log($"Content Is Running");
@@ -35,7 +37,8 @@ namespace Cf.Rpg
 #endif
             Func<IEnumerator> co = contentType switch
             {
-                ContentType.Game => CoContentGame,
+                ContentType.Intro => CoIntro,
+                ContentType.Game => CoGame,
                 _ => null,
             };
 
@@ -49,15 +52,29 @@ namespace Cf.Rpg
                 return;
             }
 
-            _coContent = co();
-            StartCoroutine(_coContent);
+            _coRunner = CoRunner(co());
+            StartCoroutine(_coRunner);
             
-            isRun = () => _coContent != null;
+            isRun = () => _coRunner != null;
         }
 
-        private IEnumerator CoContentGame()
+        private IEnumerator CoRunner(IEnumerator method)
+        {
+            yield return StartCoroutine(method);
+
+            _coRunner = null;
+        }
+
+        private IEnumerator CoIntro()
         {
             yield return null;
         }
+
+        private IEnumerator CoGame()
+        {
+            yield return null;
+        }
+        
+        #endregion
     }
 }
