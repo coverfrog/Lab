@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.IO;
 using System.Reflection;
 using System.Runtime.Serialization;
 using UnityEngine;
@@ -118,21 +119,27 @@ namespace Cf
                                 return null;
                             }
 
-                            var invokedObj = methodInfo.Invoke(FormatterServices.GetUninitializedObject(typeof(T)), null);
-                            var path = invokedObj.ToString();
-                            
-                            if (string.IsNullOrEmpty(path))
+                            var path = methodInfo.Invoke(FormatterServices.GetUninitializedObject(typeof(T)), null);
+                            if (path == null)
                             {
 #if UNITY_EDITOR
-                                Debug.LogError("Path Is Null");
+                                Debug.LogError("Method Target Missing");
 #endif
                                 return null;
                             }
 
-                            var source = Resources.Load<T>(path);
-                            
+                            var pathStr = path.ToString();
+                            var source = Resources.Load<T>(pathStr);
+                            if (!source)
+                            {
+#if UNITY_EDITOR
+                                Debug.LogError("Resources Path Is Null || Type Missing");
+#endif
+                                return null;
+                            }
+
                             _instance = Instantiate(source, Vector3.zero, Quaternion.identity);
-                            _instance.name = nameof(T);
+                            _instance.name = Path.GetFileNameWithoutExtension(pathStr);
 
                             return _instance;
                         }
