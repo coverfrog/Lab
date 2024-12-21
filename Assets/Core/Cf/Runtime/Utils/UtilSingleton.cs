@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using System.Runtime.Serialization;
 using UnityEngine;
 
 namespace Cf
@@ -27,18 +28,19 @@ namespace Cf
                                 return null;
                             }
 
-                            if (_instance == null)
+                            if (_instance)
                             {
-                                _instance = FindAnyObjectByType<T>();
-                            
-                                if (_instance == null)
-                                {
-                                    GameObject obj = new GameObject(typeof(T).Name);
-                                    _instance = obj.AddComponent<T>();
-                                }
+                                return _instance;
                             }
-                        
-                            return _instance;
+                            
+                            _instance = FindAnyObjectByType<T>();
+                            
+                            if (_instance)
+                            {
+                                return _instance;
+                            }
+                            
+                            return _instance = new GameObject(typeof(T).Name).AddComponent<T>();
                         }
                     }
                 }
@@ -92,36 +94,46 @@ namespace Cf
                                 return null;
                             }
                             
-                            if (_instance == null)
+                            if (_instance != null)
                             {
-                                _instance = FindAnyObjectByType<T>();
-
-                                if (_instance == null)
-                                {
-                                    Type t = typeof(T);
-                                    MethodInfo methodInfo =
-                                        t.GetMethod(nameof(ResourcesPath), BindingFlags.Instance | BindingFlags.NonPublic);
-
-                                    if (methodInfo != null)
-                                    {
-                                        _instance = new GameObject("Resources Load Dummy").AddComponent<T>();
-
-                                        object valueObj = methodInfo.Invoke(_instance, null);
-                                        string valueStr = (string)valueObj;
-
-                                        DestroyImmediate(_instance.gameObject);
-                                        
-                                        T resources = Resources.Load<T>(valueStr);
-                                        if (resources != null)
-                                        {
-                                            _instance = Instantiate(original: resources);
-                                            _instance.transform.position = Vector3.zero;
-                                            _instance.name = $"{typeof(T)}";
-                                        }
-                                    }
-                                }
+                                return _instance;
                             }
-                        
+                            
+                            _instance = FindAnyObjectByType<T>();
+
+                            if (_instance != null)
+                            {
+                                return _instance;
+                            }
+
+                            var t = typeof(T);
+                            var methodInfo =
+                                t.GetMethod(nameof(ResourcesPath), BindingFlags.Instance | BindingFlags.NonPublic);
+
+                            if (methodInfo == null)
+                            {
+#if UNITY_EDITOR
+                                Debug.LogError("Method Is Null");
+#endif
+                                return null;
+                            }
+
+                            var invokedObj = methodInfo.Invoke(FormatterServices.GetUninitializedObject(typeof(T)), null);
+                            var path = invokedObj.ToString();
+                            
+                            if (string.IsNullOrEmpty(path))
+                            {
+#if UNITY_EDITOR
+                                Debug.LogError("Path Is Null");
+#endif
+                                return null;
+                            }
+
+                            var source = Resources.Load<T>(path);
+                            
+                            _instance = Instantiate(source, Vector3.zero, Quaternion.identity);
+                            _instance.name = nameof(T);
+
                             return _instance;
                         }
                     }
