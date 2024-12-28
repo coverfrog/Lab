@@ -1,0 +1,16 @@
+{
+    "name": "Hate",
+    "rootNamespace": "Hate",
+    "references": [
+        "GUID:8f9f242fdb62da04db1240961374cfc7"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
