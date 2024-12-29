@@ -1,6 +1,6 @@
 {
     "name": "Hate.Ui",
-    "rootNamespace": "Hate.Ui",
+    "rootNamespace": "Hate",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
