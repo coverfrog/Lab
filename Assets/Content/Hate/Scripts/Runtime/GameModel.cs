@@ -9,24 +9,24 @@ namespace Hate
         // :: Init
         public void Init()
         {
-            mIsLogin = false;
+            mIsLoad = false;
             mId = "";
         }
 
-        // :: isLogin
-        public event Action<bool> OnLoginChanged;
+        // :: isDataLoad
+        public event Action<bool> OnDataLoadChanged;
         
-        [SerializeField] private bool mIsLogin;
+        [SerializeField] private bool mIsLoad;
 
         public bool IsLogin
         {
-            get => mIsLogin;
+            get => mIsLoad;
             set
             {
-                if (mIsLogin == value)
+                if (mIsLoad == value)
                     return;
-                mIsLogin = value;
-                OnLoginChanged?.Invoke(mIsLogin);
+                mIsLoad = value;
+                OnDataLoadChanged?.Invoke(mIsLoad);
             }
         }
 

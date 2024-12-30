@@ -4,8 +4,8 @@ using UnityEngine;
 namespace Hate
 {
     [Serializable]
-    public abstract class ModelBase
+    public class GameData
     {
-        [SerializeField] protected string sd;
+        [SerializeField] private string id;
     }
 }

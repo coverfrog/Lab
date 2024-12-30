@@ -6,8 +6,19 @@ namespace Hate
 {
     public class GameView : MonoBehaviour
     {
-        [SerializeField] private UICtrl mUiCtrl;
+        public void OnDataLoadChanged(bool inIsLoad)
+        {
+            if (inIsLoad)
+            {
+                
+            }
 
-        public UICtrl UICtrl => mUiCtrl;
+            else
+            {
+#if UNITY_EDITOR
+                Debug.Log("Data Load Failed");
+#endif
+            }
+        }
     }
 }
