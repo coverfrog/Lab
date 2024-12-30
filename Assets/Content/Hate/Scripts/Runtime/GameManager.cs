@@ -6,20 +6,12 @@ namespace Hate
 {
     public class GameManager : Util.Singleton.Mono<GameManager>
     {
-        [Header("Runtime")]
-        [SerializeField] private GameData mGameData;
-
-        [Header("Mvvm")]
-        [SerializeField] private GameModel mGameModel;
-        [SerializeField] private GameView mGameView;
-
+        [SerializeField] private GameOption mGameOption;
+        
         [RuntimeInitializeOnLoadMethod]
         private static void OnLoad()
         {
-            Instance.mGameModel = new GameModel();
-            Instance.mGameModel.Init();
-            Instance.mGameModel.OnDataLoadChanged += Instance.mGameView.OnDataLoadChanged;
-            Instance.OnGameStart();
+            Instance.Init();
         }
 
         protected override bool IsDontDestroyOnLoad()
@@ -27,9 +19,9 @@ namespace Hate
             return true;
         }
 
-        private void OnGameStart()
+        private void Init()
         {
-            
+            DataManager.Instance.Init(mGameOption.GuestLogin);
         }
     }
 }

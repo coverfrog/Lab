@@ -1,7 +1,9 @@
 {
     "name": "Hate.Data",
     "rootNamespace": "Hate",
-    "references": [],
+    "references": [
+        "GUID:8f9f242fdb62da04db1240961374cfc7"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
