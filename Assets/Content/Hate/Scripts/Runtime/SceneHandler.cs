@@ -9,6 +9,7 @@ namespace Hate
         MainMenu = 0,
         Game = 1,
         Loading = 100,
+        UI = 200,
     }
     
     public class SceneHandler : Cf.Util.Singleton.Mono<SceneHandler>
@@ -28,14 +29,18 @@ namespace Hate
                 { SceneType.MainMenu, "0_MainMenu" },
                 { SceneType.Game, "1_Game" },
                 { SceneType.Loading, "100_Loading" },
+                { SceneType.UI, "200_UI" },
             };
         }
 
-        public void Load(SceneType inSceneType)
+        public void Load(SceneType inSceneType, bool inAdditive)
         {
+            // :: get name
             var sceneName = _mSceneNameDict[inSceneType];
+            var loadMode = inAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
 
-            SceneManager.LoadScene(sceneName);
+            // :: load
+            SceneManager.LoadScene(sceneName, loadMode);
         }
     }
 }

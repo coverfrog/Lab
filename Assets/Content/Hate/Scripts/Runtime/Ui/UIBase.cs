@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Cf
+namespace Hate
 {
-    public class SceneField : MonoBehaviour
+    public class UIBase : MonoBehaviour
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

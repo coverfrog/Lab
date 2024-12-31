@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Content/Hate/Scenes/100_Loading.unity
     guid: 1ceee53cb18be734085bb32cb1a27c4c
+  - enabled: 1
+    path: Assets/Content/Hate/Scenes/200_UI.unity
+    guid: 2c95e7d50dede1048b0b4dc36bde47c7
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 0f0772bbb14c1cf4dada7837df4137f8, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 6fc0d14a34214554c8498f16eb431be9, type: 2}

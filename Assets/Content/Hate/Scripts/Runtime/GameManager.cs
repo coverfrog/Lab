@@ -23,6 +23,10 @@ namespace Hate
         {
             DataHandler.Instance.Init(mGameOption.DebugLogin);
             SceneHandler.Instance.Init();
+            
+            transform.SetAsLastSibling();
+            
+            SceneHandler.Instance.Load(SceneType.UI, true);
         }
     }
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Hate
 {
-    public class SceneLoading : SceneBase
+    public class UIMainMenu : UIBase
     {
-       
+        
     }
 }
