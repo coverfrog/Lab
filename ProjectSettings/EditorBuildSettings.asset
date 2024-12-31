@@ -6,17 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Contents/CardTripleMatch/Scenes/0_Intro.unity
-    guid: 3e60e778cb765c148abe4e2a7a6b77d1
-  - enabled: 1
-    path: Assets/Contents/CardTripleMatch/Scenes/2_Game.unity
-    guid: ab981b6c8622e5c4abe577c376ef9c3f
-  - enabled: 1
-    path: Assets/Contents/CardTripleMatch/Scenes/1_MainMenu.unity
-    guid: 0901dbfa1bb60074b87ae360f8c4668e
-  - enabled: 1
-    path: Assets/Content/Hate/Scenes/1_MainMenu.unity
+    path: Assets/Content/Hate/Scenes/0_MainMenu.unity
     guid: bc1905ac10a667e498b17397c5f10237
+  - enabled: 1
+    path: Assets/Content/Hate/Scenes/1_Game.unity
+    guid: 59edde87690a93741bd81de7f43e2b9b
+  - enabled: 1
+    path: Assets/Content/Hate/Scenes/100_Loading.unity
+    guid: 1ceee53cb18be734085bb32cb1a27c4c
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 0f0772bbb14c1cf4dada7837df4137f8, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: 6fc0d14a34214554c8498f16eb431be9, type: 2}

@@ -10,12 +10,12 @@ namespace Hate
         [SerializeField] private string mId;
         [SerializeField] private string mPw;
         
-        public void Init(bool pIsGuestLogin)
+        public void Init(bool inDebugLogin)
         {
-            if (pIsGuestLogin)
+            if (inDebugLogin)
             {
-                mId = "Guest";
-                mPw = "Guest";
+                mId = "Debug";
+                mPw = "Debug";
             }
 
             else

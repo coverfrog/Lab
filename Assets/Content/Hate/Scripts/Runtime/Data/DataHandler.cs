@@ -5,7 +5,7 @@ using Cf;
 
 namespace Hate
 {
-    public class DataManager : Util.Singleton.Mono<DataManager>
+    public class DataHandler : Util.Singleton.Mono<DataHandler>
     {
         [SerializeField] private GameData mGameData;
 
@@ -14,14 +14,10 @@ namespace Hate
             return true;
         }
         
-        public void Init(bool pIsGuestLogin)
+        public void Init(bool inDebugLogin)
         {
             mGameData = new GameData();
-            
-            if (pIsGuestLogin)
-            {
-                mGameData.Init(pIsGuestLogin);
-            }
+            mGameData.Init(inDebugLogin);
         }
     }
 }

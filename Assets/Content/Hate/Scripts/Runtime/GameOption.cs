@@ -1,13 +1,14 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Hate
 {
     [Serializable]
     public class GameOption
     {
-        [SerializeField] private bool mGuestLogin;
+        [SerializeField] private bool mDebugLogin = true;
 
-        public bool GuestLogin => mGuestLogin;
+        public bool DebugLogin => mDebugLogin;
     }
 }

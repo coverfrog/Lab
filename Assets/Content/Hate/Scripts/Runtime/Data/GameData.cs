@@ -9,10 +9,10 @@ namespace Hate
         
         [SerializeField] private UserData mUserData;
         
-        public void Init(bool pIsGuestLogin)
+        public void Init(bool inDebugLogin)
         {
             mUserData = new UserData();
-            mUserData.Init(pIsGuestLogin);
+            mUserData.Init(inDebugLogin);
         }
     }
 }

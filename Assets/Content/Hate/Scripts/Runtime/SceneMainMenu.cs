@@ -7,9 +7,21 @@ namespace Hate
     [Serializable]
     public class SceneMainMenuModel
     {
-        public void Init()
+        public event Action<bool> OnGameStartClickedChanged; 
+        
+        [SerializeField] private bool mGameStartClicked;
+
+        public bool GameStartClicked
         {
-            
+            get => mGameStartClicked;
+            set
+            {
+                if (mGameStartClicked == value) return;
+
+                mGameStartClicked = value;
+                
+                OnGameStartClickedChanged?.Invoke(mGameStartClicked);
+            }
         }
     }
 
@@ -29,14 +41,17 @@ namespace Hate
         private void Start()
         {
             mModel = new SceneMainMenuModel();
-            mModel.Init();
+            mModel.OnGameStartClickedChanged += OnOnGameStartClickedChanged;
             
-            mView.GameStartBtn.onClick.AddListener(OnGameStart);
+            mView.GameStartBtn.onClick.AddListener(() => mModel.GameStartClicked = true);
         }
 
-        private void OnGameStart()
+        private void OnOnGameStartClickedChanged(bool inTrue)
         {
-            Debug.Log("Game Start");
+            if (!inTrue) 
+                return;
+            
+            SceneHandler.Instance.Load(SceneType.Game);
         }
     }
 }

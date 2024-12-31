@@ -21,7 +21,8 @@ namespace Hate
 
         private void Init()
         {
-            DataManager.Instance.Init(mGameOption.GuestLogin);
+            DataHandler.Instance.Init(mGameOption.DebugLogin);
+            SceneHandler.Instance.Init();
         }
     }
 }
