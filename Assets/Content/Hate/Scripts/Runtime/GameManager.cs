@@ -21,12 +21,19 @@ namespace Hate
 
         private void Init()
         {
+            _ = DataHandler.Instance;
+            _ = SceneHandler.Instance;
+            _ = UIManager.Instance;
+
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            
             DataHandler.Instance.Init(mGameOption.DebugLogin);
             SceneHandler.Instance.Init();
-            
-            transform.SetAsLastSibling();
-            
-            SceneHandler.Instance.Load(SceneType.UI, true);
+            UIManager.Instance.Init();
         }
     }
 }
