@@ -21,7 +21,7 @@ namespace Hate
             return true;
         }
         
-        public void Init()
+        public void Init(Object inSender)
         {
             // :: get type by dict
             _mSceneNameDict = new Dictionary<SceneType, string>()

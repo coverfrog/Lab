@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Cf;
+using Object = UnityEngine.Object;
 
 namespace Hate
 {
@@ -14,7 +15,7 @@ namespace Hate
             return true;
         }
         
-        public void Init(bool inDebugLogin)
+        public void Init(Object inSender, bool inDebugLogin)
         {
             mGameData = new GameData();
             mGameData.Init(inDebugLogin);

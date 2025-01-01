@@ -31,9 +31,9 @@ namespace Hate
         {
             base.Awake();
             
-            DataHandler.Instance.Init(mGameOption.DebugLogin);
-            SceneHandler.Instance.Init();
-            UIManager.Instance.Init();
+            DataHandler.Instance.Init(this, mGameOption.DebugLogin);
+            SceneHandler.Instance.Init(this);
+            UIManager.Instance.Init(this);
         }
     }
 }
