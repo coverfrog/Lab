@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 [RequireComponent(typeof(PlayerInput))]
 public class InputManager : MonoBehaviour
 {
     public const string InputActionAssetResourcesPath = "InputSystem_Actions";
+
+    [SerializeField] private InputData inputData = new InputData();
     
     private PlayerInput _mPlayerInput;
     private Dictionary<string, InputAction> _mInputActionDict;
-    private Dictionary<InputEventName, string> _mInputEventNameDict;
+    private Dictionary<InputEventName, InputAction> _mInputEventNameDict;
     
     private void Awake()
     {
@@ -25,6 +28,7 @@ public class InputManager : MonoBehaviour
         GetComponents();
         GetInputActionDict(ref inputActionAsset, out _mInputActionDict);
         GetInputEventNameDict(ref _mInputActionDict, out _mInputEventNameDict);
+        SetInputEventAction(ref _mInputEventNameDict);
         
         _mPlayerInput.actions = inputActionAsset;
     }
@@ -38,22 +42,16 @@ public class InputManager : MonoBehaviour
     {
         inputActionDict = new Dictionary<string, InputAction>();
 
-        int missingCount = 0;
-        
         foreach (InputActionMap inputActionMap in inputActionAsset.actionMaps)
         {
             foreach (InputAction inputAction in inputActionMap.actions)
             {
                 if (inputActionDict.TryAdd(inputAction.name, inputAction))
                 {
-                    continue;   
+                    
                 }
-
-                ++missingCount;
             }
         }
-
-        Debug.Assert(missingCount <= 0,$"missing count : {missingCount}");
 
         if (inputActionDict.Count > 0)
         {
@@ -64,9 +62,9 @@ public class InputManager : MonoBehaviour
         inputActionDict.Add("Error", null);
     }
 
-    private void GetInputEventNameDict(ref Dictionary<string, InputAction> inputActionDict, out Dictionary<InputEventName, string> inputEventNameDict)
+    private static void GetInputEventNameDict(ref Dictionary<string, InputAction> inputActionDict, out Dictionary<InputEventName, InputAction> inputEventNameDict)
     {
-        inputEventNameDict = new Dictionary<InputEventName, string>();
+        inputEventNameDict = new Dictionary<InputEventName, InputAction>();
 
         int missingCount = 0;
         
@@ -74,7 +72,7 @@ public class InputManager : MonoBehaviour
         {
             if (Enum.TryParse(pair.Key, false, out InputEventName eventName))
             {
-                inputEventNameDict.TryAdd(eventName, pair.Key);
+                inputEventNameDict.TryAdd(eventName, pair.Value);
                 
                 continue;
             }
@@ -83,5 +81,18 @@ public class InputManager : MonoBehaviour
         }
 
         Debug.Assert( missingCount <= 0 ,$"missing count : {missingCount}");
+    }
+
+    private void SetInputEventAction(ref Dictionary<InputEventName, InputAction> inputEventNameDict)
+    {
+        if (inputEventNameDict.TryGetValue(InputEventName.Click, out InputAction leftClickInputAction))
+        {
+            leftClickInputAction.performed += context => inputData.isMouseLeftClick = context.ReadValue<float>() > 0;
+        }
+
+        if (inputEventNameDict.TryGetValue(InputEventName.RightClick, out InputAction rightClickInputAction))
+        {
+            rightClickInputAction.performed += context => inputData.isMouseRightClick = context.ReadValue<float>() > 0;
+        }
     }
 }
