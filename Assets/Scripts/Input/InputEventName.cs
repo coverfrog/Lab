@@ -1,0 +1,22 @@
+public enum InputEventName
+{
+    Move,
+    Look,
+    Attack,
+    Interact,
+    Crouch,
+    Jump,
+    Previous,
+    Next,
+    Sprint,
+    Navigate,
+    Submit,
+    Cancel,
+    Point,
+    Click,
+    RightClick,
+    MiddleClick,
+    ScrollWheel,
+    TrackedDevicePosition,
+    TrackedDeviceOrientation,
+}

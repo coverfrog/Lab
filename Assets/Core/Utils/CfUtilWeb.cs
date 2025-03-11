@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Cf.Web
+namespace Cf.Utils
 {
     public enum RequestType
     {
