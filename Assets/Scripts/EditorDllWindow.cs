@@ -9,12 +9,12 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-public class CfEditorUtilWindowDll : EditorWindow
+public class EditorDllWindow : EditorWindow
 {
     [MenuItem("Cf/Window/Dll")]
     public static void Init()
     {
-        _ = GetWindow<CfEditorUtilWindowDll>();
+        _ = GetWindow<EditorDllWindow>();
     }
 
     private void OnGUI()
