@@ -95,4 +95,12 @@ public class InputManager : MonoBehaviour
             rightClickInputAction.performed += context => inputData.isMouseRightClick = context.ReadValue<float>() > 0;
         }
     }
+
+    private void SetReBind(InputEventName inputEventName)
+    {
+        if (_mInputEventNameDict.TryGetValue(inputEventName, out InputAction inputAction))
+        {
+            
+        }
+    }
 }
