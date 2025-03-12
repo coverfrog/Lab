@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-[RequireComponent(typeof(PlayerInput))]
 public class InputManager : MonoBehaviour
 {
     public const string InputActionAssetResourcesPath = "InputSystem_Actions";
@@ -36,6 +35,7 @@ public class InputManager : MonoBehaviour
     private void GetComponents()
     {
         if (!_mPlayerInput) _mPlayerInput = gameObject.GetComponent<PlayerInput>();
+        if (!_mPlayerInput) _mPlayerInput = gameObject.AddComponent<PlayerInput>();
     }
 
     public static void GetInputActionDict(ref InputActionAsset inputActionAsset, out Dictionary<string, InputAction> inputActionDict)
