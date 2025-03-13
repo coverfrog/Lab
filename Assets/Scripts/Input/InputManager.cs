@@ -1,21 +1,26 @@
 using System;
 using System.Collections.Generic;
+using Cf.Pattern;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
-public class InputManager : MonoBehaviour
+public class InputManager : Singleton<InputManager>
 {
     public const string InputActionAssetResourcesPath = "InputSystem_Actions";
 
-    [SerializeField] private InputData inputData = new InputData();
+    [SerializeField] private InputData mInputData = new InputData();
     
     private PlayerInput _mPlayerInput;
     private Dictionary<string, InputAction> _mInputActionDict;
     private Dictionary<InputEventName, InputAction> _mInputEventNameDict;
+
+    public InputData Data => mInputData;
     
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+        
         InputActionAsset inputActionAsset = Resources.Load<InputActionAsset>(InputActionAssetResourcesPath);
 
         Debug.Assert(inputActionAsset, "Load Fail");
@@ -87,20 +92,12 @@ public class InputManager : MonoBehaviour
     {
         if (inputEventNameDict.TryGetValue(InputEventName.Click, out InputAction leftClickInputAction))
         {
-            leftClickInputAction.performed += context => inputData.isMouseLeftClick = context.ReadValue<float>() > 0;
+            leftClickInputAction.performed += context => mInputData.isMouseLeftClick = context.ReadValue<float>() > 0;
         }
 
         if (inputEventNameDict.TryGetValue(InputEventName.RightClick, out InputAction rightClickInputAction))
         {
-            rightClickInputAction.performed += context => inputData.isMouseRightClick = context.ReadValue<float>() > 0;
-        }
-    }
-
-    private void SetReBind(InputEventName inputEventName)
-    {
-        if (_mInputEventNameDict.TryGetValue(inputEventName, out InputAction inputAction))
-        {
-            
+            rightClickInputAction.performed += context => mInputData.isMouseRightClick = context.ReadValue<float>() > 0;
         }
     }
 }

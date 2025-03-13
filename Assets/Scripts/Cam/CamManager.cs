@@ -6,12 +6,10 @@ using UnityEngine;
 public class CamManager : Singleton<CamManager>
 {
     private readonly Dictionary<CamType, CamHelper> _mCamHelperDict = new Dictionary<CamType, CamHelper>();
-    
-    public event Action<CamHelper> OnMainCamChanged, OnUiCamChanged, OnEffectCamChanged;
 
-    public CamHelper GetCameraHelper(CamType camType)
+    public bool GetCameraHelper(CamType camType, out CamHelper helper)
     {
-        return _mCamHelperDict.GetValueOrDefault(camType);
+        return _mCamHelperDict.TryGetValue(camType, out helper);
     }
 
     public void SetCameraHelper(CamHelper camHelper)
@@ -31,18 +29,30 @@ public class CamManager : Singleton<CamManager>
             _ => throw new ArgumentOutOfRangeException()
         };
         
-        onCamChanged?.Invoke(camHelper);
+        onCamChanged.Invoke(camHelper);
     }
+    
+    // ---
+
+    public event Action<CamHelper> OnMainCamChanged;
 
     private void OnMainCamChange(CamHelper camHelper)
     {
         OnMainCamChanged?.Invoke(camHelper);
     }
+    
+    // ---
+
+    public event Action<CamHelper>  OnUiCamChanged;
 
     private void OnUiCamChange(CamHelper camHelper)
     {
         OnUiCamChanged?.Invoke(camHelper);
     }
+
+    // ---
+    
+    public event Action<CamHelper> OnEffectCamChanged;
 
     private void OnEffectCamChange(CamHelper camHelper)
     {
