@@ -99,5 +99,32 @@ public class InputManager : Singleton<InputManager>
         {
             rightClickInputAction.performed += context => mInputData.isMouseRightClick = context.ReadValue<float>() > 0;
         }
+        
+        //
+        
+        if (inputEventNameDict.TryGetValue(InputEventName.Q, out InputAction aInputAction))
+        {
+            aInputAction.performed += context => mInputData.isQ = context.ReadValue<float>() > 0;
+            aInputAction.canceled += context => mInputData.isQ = context.ReadValue<float>() > 0;
+        }
+        
+        if (inputEventNameDict.TryGetValue(InputEventName.W, out InputAction bInputAction))
+        {
+            bInputAction.performed += context => mInputData.isW = context.ReadValue<float>() > 0;
+            bInputAction.canceled += context => mInputData.isW = context.ReadValue<float>() > 0;
+        }
+        
+        if (inputEventNameDict.TryGetValue(InputEventName.E, out InputAction cInputAction))
+        {
+            cInputAction.performed += context => mInputData.isE = context.ReadValue<float>() > 0;
+            cInputAction.canceled += context => mInputData.isE = context.ReadValue<float>() > 0;
+        }
+        
+        if (inputEventNameDict.TryGetValue(InputEventName.R, out InputAction dInputAction))
+        {
+            dInputAction.performed += context => mInputData.isR = context.ReadValue<float>() > 0;
+            dInputAction.canceled += context => mInputData.isR = context.ReadValue<float>() > 0;
+        }
+        
     }
 }

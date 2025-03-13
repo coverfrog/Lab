@@ -1,5 +1,3 @@
-using System;
-
 public enum InputEventName
 {
     Move,
@@ -11,10 +9,10 @@ public enum InputEventName
     Previous,
     Next,
     Sprint,
-    A,
-    B,
-    C,
-    D,
+    Q,
+    W,
+    E,
+    R,
     Navigate,
     Submit,
     Cancel,

@@ -514,6 +514,10 @@ MonoBehaviour:
   mInputData:
     isMouseLeftClick: 0
     isMouseRightClick: 0
+    isA: 0
+    isB: 0
+    isC: 0
+    isD: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,8 +580,8 @@ GameObject:
   - component: {fileID: 1871550033}
   - component: {fileID: 1871550032}
   - component: {fileID: 1871550037}
-  - component: {fileID: 1871550036}
   - component: {fileID: 1871550038}
+  - component: {fileID: 1871550036}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged

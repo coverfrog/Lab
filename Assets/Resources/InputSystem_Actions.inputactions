@@ -87,7 +87,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "A",
+                    "name": "Q",
                     "type": "Button",
                     "id": "1e46bb20-681f-4424-8b5d-356e3941f54b",
                     "expectedControlType": "",
@@ -96,7 +96,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "B",
+                    "name": "W",
                     "type": "Button",
                     "id": "c3531b71-7d22-4b73-97f1-002ff73f30b5",
                     "expectedControlType": "",
@@ -105,7 +105,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "C",
+                    "name": "E",
                     "type": "Button",
                     "id": "8c54a1cd-45b8-4367-9e01-34d6b9748201",
                     "expectedControlType": "",
@@ -114,7 +114,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "D",
+                    "name": "R",
                     "type": "Button",
                     "id": "17765eaa-fdb1-48d3-b186-ca836b29c411",
                     "expectedControlType": "",
@@ -468,11 +468,11 @@
                 {
                     "name": "",
                     "id": "afbcb6f9-f893-418c-9b89-aad3084fd90e",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "A",
+                    "action": "Q",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -483,18 +483,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "A",
+                    "action": "Q",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "59d4fea7-14e6-483c-a862-de6dcbaf3ef5",
-                    "path": "<Keyboard>/b",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "B",
+                    "action": "W",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -505,18 +505,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "B",
+                    "action": "W",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "34c6f393-f827-40e3-8eb5-b44e4904243c",
-                    "path": "<Keyboard>/c",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "C",
+                    "action": "E",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -527,18 +527,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "C",
+                    "action": "E",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "dcbc589f-2c64-47a4-ab10-f884d48e2f71",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "D",
+                    "action": "R",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -549,7 +549,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "D",
+                    "action": "R",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
