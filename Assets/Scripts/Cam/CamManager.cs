@@ -43,7 +43,7 @@ public class CamManager : Singleton<CamManager>
     
     // ---
 
-    public event Action<CamHelper>  OnUiCamChanged;
+    public event Action<CamHelper> OnUiCamChanged;
 
     private void OnUiCamChange(CamHelper camHelper)
     {
