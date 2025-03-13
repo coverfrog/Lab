@@ -23,7 +23,7 @@ public class CamHelper : MonoBehaviour
     {
         c = mCam;
 
-        return c != null;
+        return c;
     }
 
     private void Awake()
