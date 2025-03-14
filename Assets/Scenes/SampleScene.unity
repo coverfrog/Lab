@@ -515,9 +515,13 @@ MonoBehaviour:
     isMouseLeftClick: 0
     isMouseRightClick: 0
     isA: 0
-    isB: 0
-    isC: 0
+    isS: 0
     isD: 0
+    isF: 0
+    isQ: 0
+    isW: 0
+    isE: 0
+    isR: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -582,6 +586,8 @@ GameObject:
   - component: {fileID: 1871550037}
   - component: {fileID: 1871550038}
   - component: {fileID: 1871550036}
+  - component: {fileID: 1871550039}
+  - component: {fileID: 1871550040}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -741,6 +747,31 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1871550039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871550030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec84d7cdae75cf42bbad6b9790bf586, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mSkillRequest: {fileID: 1871550040}
+--- !u!114 &1871550040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871550030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6041fa1c69087a842ba2e58d9291084d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1876964781
 GameObject:
   m_ObjectHideFlags: 0

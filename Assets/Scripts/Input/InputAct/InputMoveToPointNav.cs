@@ -33,11 +33,16 @@ public class InputMoveToPointNav : InputAct
 
     private IEnumerator Start()
     {
-        while (!InputManager.Instance) 
+        while (!InputManager.Instance)
+        {
             yield return YieldCache.WaitForEndOfFrame;
-        while (!CamManager.Instance) 
+        }
+
+        while (!CamManager.Instance)
+        {
             yield return YieldCache.WaitForEndOfFrame;
-        
+        }
+
         _mInputManager = InputManager.Instance;
         _mCamManager = CamManager.Instance;
     }
@@ -48,12 +53,17 @@ public class InputMoveToPointNav : InputAct
         {
             return;
         }
+        
+        if (_mInputManager.Data == null)
+        {
+            return;
+        }
 
         if (!_mInputManager.Data.isMouseRightClick)
         {
             return;
         }
-        
+
         SetPoint();
     }
 
