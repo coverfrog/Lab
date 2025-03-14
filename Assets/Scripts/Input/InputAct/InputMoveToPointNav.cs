@@ -59,7 +59,7 @@ public class InputMoveToPointNav : InputAct
             return;
         }
 
-        if (!_mInputManager.Data.isMouseRightClick)
+        if (!_mInputManager.Data.isRightClick)
         {
             return;
         }

@@ -9,6 +9,7 @@ public class InputManager : Singleton<InputManager>
 {
     public const string InputActionAssetResourcesPath = "InputSystem_Actions";
 
+    [Header("Data")]
     [SerializeField] private InputData mInputData = new InputData();
     
     private PlayerInput _mPlayerInput;
@@ -90,69 +91,50 @@ public class InputManager : Singleton<InputManager>
 
     private void SetInputEventAction(ref Dictionary<InputEventName, InputAction> inputEventNameDict)
     {
-        if (inputEventNameDict.TryGetValue(InputEventName.Click, out InputAction iaMouseLeftClick))
+        Type inputDataType = typeof(InputData);
+
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.Click);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.RightClick);
+
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.A);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.S);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.D);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.F);
+
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.Q);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.W);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.E);
+        _ = SetInputEventActionFloatToBool(ref inputEventNameDict, ref inputDataType, InputEventName.R);
+    }
+
+    private bool SetInputEventActionFloatToBool(ref Dictionary<InputEventName, InputAction> inputEventNameDict, ref Type inputDataType, InputEventName inputEventName)
+    {
+        if (!inputEventNameDict.TryGetValue(inputEventName, out InputAction inputAction))
         {
-            iaMouseLeftClick.performed += context => mInputData.isMouseLeftClick = context.ReadValue<float>() > 0;
-            iaMouseLeftClick.canceled += context => mInputData.isMouseLeftClick = context.ReadValue<float>() > 0;
+            return false;
+        }
+        
+        var field = inputDataType.GetField($"is{inputEventName}");
+
+        if (field == null)
+        {
+            return false;
         }
 
-        if (inputEventNameDict.TryGetValue(InputEventName.RightClick, out InputAction iaMouseRightClick))
+        inputAction.performed += context =>
         {
-            iaMouseRightClick.performed += context => mInputData.isMouseRightClick = context.ReadValue<float>() > 0;
-            iaMouseRightClick.canceled += context => mInputData.isMouseRightClick = context.ReadValue<float>() > 0;
-        }
+            bool b = context.ReadValue<float>() > 0;
+            
+            field.SetValue(mInputData, b);
+        };
         
-        //
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.A, out InputAction iaA))
+        inputAction.canceled += context =>
         {
-            iaA.performed += context => mInputData.isA = context.ReadValue<float>() > 0;
-            iaA.canceled += context => mInputData.isA = context.ReadValue<float>() > 0;
-        }
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.S, out InputAction iaS))
-        {
-            iaS.performed += context => mInputData.isS = context.ReadValue<float>() > 0;
-            iaS.canceled += context => mInputData.isS = context.ReadValue<float>() > 0;
-        }
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.D, out InputAction iaD))
-        {
-            iaD.performed += context => mInputData.isD = context.ReadValue<float>() > 0;
-            iaD.canceled += context => mInputData.isD = context.ReadValue<float>() > 0;
-        }
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.F, out InputAction iaF))
-        {
-            iaF.performed += context => mInputData.isF = context.ReadValue<float>() > 0;
-            iaF.canceled += context => mInputData.isF = context.ReadValue<float>() > 0;
-        }
-        
-        //
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.Q, out InputAction iaQ))
-        {
-            iaQ.performed += context => mInputData.isQ = context.ReadValue<float>() > 0;
-            iaQ.canceled += context => mInputData.isQ = context.ReadValue<float>() > 0;
-        }
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.W, out InputAction iaW))
-        {
-            iaW.performed += context => mInputData.isW = context.ReadValue<float>() > 0;
-            iaW.canceled += context => mInputData.isW = context.ReadValue<float>() > 0;
-        }
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.E, out InputAction iaE))
-        {
-            iaE.performed += context => mInputData.isE = context.ReadValue<float>() > 0;
-            iaE.canceled += context => mInputData.isE = context.ReadValue<float>() > 0;
-        }
-        
-        if (inputEventNameDict.TryGetValue(InputEventName.R, out InputAction iaR))
-        {
-            iaR.performed += context => mInputData.isR = context.ReadValue<float>() > 0;
-            iaR.canceled += context => mInputData.isR = context.ReadValue<float>() > 0;
-        }
-        
+            bool b = context.ReadValue<float>() > 0;
+            
+            field.SetValue(mInputData, b);
+        };
+
+        return true;
     }
 }
