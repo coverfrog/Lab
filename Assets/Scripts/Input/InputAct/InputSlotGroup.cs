@@ -6,31 +6,12 @@ using UnityEngine;
 
 public class InputSlotGroup : MonoBehaviour
 {
-    private static readonly InputEventName[] SlotNames = new[]
-    {
-        InputEventName.A,
-        InputEventName.S,
-        InputEventName.D,
-        InputEventName.F,
-        
-        InputEventName.Q,
-        InputEventName.W,
-        InputEventName.E,
-        InputEventName.R,
-    };
-
     private static readonly bool[] SlotDowns = new bool[8];
     private static readonly bool[] SlotPrevDowns = new bool[8];
 
-    [SerializeField] private InputSkillRequest mSkillRequest;
+    public event Action<int> OnSlotInput;
     
     private InputManager _mInputManager;
-
-    private void Awake()
-    {
-        if (!mSkillRequest) mSkillRequest = gameObject.GetComponent<InputSkillRequest>();
-        if (!mSkillRequest) mSkillRequest = gameObject.AddComponent<InputSkillRequest>();
-    }
 
     private IEnumerator Start()
     {
@@ -59,11 +40,16 @@ public class InputSlotGroup : MonoBehaviour
             return;
         }
 
-        if (!mSkillRequest)
-        {
-            return;
-        }
-
+        SlotDowns[0] = _mInputManager.Data.isA;
+        SlotDowns[1] = _mInputManager.Data.isS;
+        SlotDowns[2] = _mInputManager.Data.isD;
+        SlotDowns[3] = _mInputManager.Data.isF;
+        
+        SlotDowns[4] = _mInputManager.Data.isQ;
+        SlotDowns[5] = _mInputManager.Data.isW;
+        SlotDowns[6] = _mInputManager.Data.isE;
+        SlotDowns[7] = _mInputManager.Data.isR;
+        
         for (int slotIdx = 0; slotIdx < SlotDowns.Length; ++slotIdx)
         {
             if (SlotPrevDowns[slotIdx] == SlotDowns[slotIdx])
@@ -71,7 +57,7 @@ public class InputSlotGroup : MonoBehaviour
                 continue;
             }
 
-            mSkillRequest.Request(slotIdx);
+            OnSlotInput?.Invoke(slotIdx);
 
             SlotPrevDowns[slotIdx] = SlotDowns[slotIdx];
         }

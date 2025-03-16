@@ -9,10 +9,12 @@ public class InputManager : Singleton<InputManager>
 {
     public const string InputActionAssetResourcesPath = "InputSystem_Actions";
 
-    [Header("Data")]
+    [Header("Debug")]
     [SerializeField] private InputData mInputData = new InputData();
     
     private PlayerInput _mPlayerInput;
+    private InputCursorHelper _mInputCursorHelper;
+    
     private Dictionary<string, InputAction> _mInputActionDict;
     private Dictionary<InputEventName, InputAction> _mInputEventNameDict;
 
@@ -42,6 +44,9 @@ public class InputManager : Singleton<InputManager>
     {
         if (!_mPlayerInput) _mPlayerInput = gameObject.GetComponent<PlayerInput>();
         if (!_mPlayerInput) _mPlayerInput = gameObject.AddComponent<PlayerInput>();
+        
+        if (!_mInputCursorHelper) _mInputCursorHelper = gameObject.GetComponent<InputCursorHelper>();
+        if (!_mInputCursorHelper) _mInputCursorHelper = gameObject.AddComponent<InputCursorHelper>();
     }
 
     public static void GetInputActionDict(ref InputActionAsset inputActionAsset, out Dictionary<string, InputAction> inputActionDict)
@@ -135,6 +140,18 @@ public class InputManager : Singleton<InputManager>
             field.SetValue(mInputData, b);
         };
 
+        return true;
+    }
+
+    public bool SetCursor(InputCursorType cursorType)
+    {
+        if (!_mInputCursorHelper)
+        {
+            return false;
+        }
+
+        _mInputCursorHelper.SetCursor(cursorType);
+        
         return true;
     }
 }
