@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 public class InputManager : Singleton<InputManager>
 {
-    public const string InputActionAssetResourcesPath = "InputSystem_Actions";
+    public const string InputActionAssetResourcesPath = "Rdd/InputSystem_Actions";
 
     [Header("Debug")]
     [SerializeField] private InputData mInputData = new InputData();
