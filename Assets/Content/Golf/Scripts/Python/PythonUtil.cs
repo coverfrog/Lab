@@ -7,46 +7,30 @@ using Debug = UnityEngine.Debug;
 
 namespace Golf
 {
+    public static class PythonConst
+    {
+        private static readonly string EnvDir = Path.Combine(Directory.GetParent(Application.dataPath)?.FullName ?? string.Empty, "Python312");
+
+        public static readonly string PythonFileDir = Path.Combine(EnvDir, "Scripts");
+    }
+
+    public enum PythonRunType
+    {
+        Init,
+        Code,
+    }
+ 
     public static class PythonUtil
     {
-        public static bool GetIsPythonInstalled()
-        {
-            var isRun = RunPython("--version", out string output, out string error);
+        #region :: Run
 
-            if (!isRun)
-            {
-                return false;
-            }
-
-            var pattern = @"Python ([A-Za-z0-9]+(\.[A-Za-z0-9]+)+)";
-            
-            // Python x.x.(int) 
-            // Python x.x.(string)
-            
-            Debug.Log($"output : {output}, error : {error}");
-
-            return !string.IsNullOrEmpty(output) && Regex.IsMatch(output, pattern);
-            
-            // Check Env
-        }
-
-        public static bool InitPythonEnv(string envPath)
-        {
-            return Directory.Exists(envPath) || RunPython($"-m venv \"{envPath}\"", out _, out _);
-        }
-
-        public static bool InitPythonModules(string modules)
-        {
-            return RunPython($"-m pip install {modules}", out _, out _);
-        }
-        
-        private static bool RunPython(string arguments, out string output, out string error)
+        private static bool RunProcess(string fileName, string arguments, out string output, out string error)
         {
             try
             {
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "python",
+                    FileName = fileName,
                     Arguments = arguments,
                     RedirectStandardOutput = true,
                     RedirectStandardError = true,
@@ -69,6 +53,11 @@ namespace Golf
                 output = process.StandardOutput.ReadToEnd();
                 error = process.StandardError.ReadToEnd();
                 
+                output = string.IsNullOrEmpty(output) ? "null" : output;
+                error = string.IsNullOrEmpty(error) ? "null" : error;
+                
+                Debug.LogError($"[Py]\n<Output>\n{output}\n<Error>\n{error}");
+                
                 return true;
             }
 
@@ -82,5 +71,14 @@ namespace Golf
 
             return false;
         }
+        
+        private static bool RunPython(string fileName, string arguments, out string output, out string error)
+        {
+            var scriptPath = Path.Combine(PythonConst.PythonFileDir, $"{Path.GetFileNameWithoutExtension(fileName)}.py");
+
+            return RunProcess(scriptPath, arguments , out output, out error);
+        }
+
+        #endregion
     }
 }
