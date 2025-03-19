@@ -86,7 +86,9 @@ public class VWorldHelper : MonoBehaviour
 
     private void OnMapUpdate(VWorldMapSetting setting)
     {
-        var point = vWorldCursor.GetPoint();
+        vWorldCursor.OnCursorUpdate(mMapSetting);
+        
+        var point = vWorldCursor.GetCenterPoint();
 
         if (!Cache.TryGetValue(point, out var textures))
         {

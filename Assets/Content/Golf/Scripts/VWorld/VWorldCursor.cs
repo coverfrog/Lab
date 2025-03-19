@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 [Serializable]
 public class VWorldCursorPointConst
@@ -18,17 +19,43 @@ public class VWorldCursorPoint : VWorldCursorPointConst
 
 public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler, IScrollHandler
 {
-    [SerializeField] private VWorldCursorPoint mVWorldCursorPoint;
+    [SerializeField] private VWorldCursorPoint mCenterPoint = new VWorldCursorPoint();
+    [SerializeField] private VWorldCursorPoint mLeftBottomPoint = new VWorldCursorPoint();
+    [SerializeField] private VWorldCursorPoint mRightTopPoint = new VWorldCursorPoint();
 
-    public VWorldCursorPoint GetPoint() => mVWorldCursorPoint;
+    public VWorldCursorPoint GetCenterPoint() => mCenterPoint;
     
     public event Action OnZoomInAction; 
     public event Action OnZoomOutAction;
 
     private void Awake()
     {
-        mVWorldCursorPoint = new VWorldCursorPoint();
+        mCenterPoint = new VWorldCursorPoint();
     }
+
+    #region :: Point Update
+
+    public void OnCursorUpdate(VWorldMapSetting setting)
+    {
+        var zoomLevel = setting.mapZoomLevel;
+        
+        var pixelToLongitudeRatio = 360.0f / (Mathf.Pow(2, zoomLevel) * 256.0f);
+        var pixelToLatitudeRatio = 180.0f / (Mathf.Pow(2, zoomLevel) * 256.0f);
+
+        var halfWidthInPixels = setting.mapWidth / 2.0f;
+        var halfHeightInPixels = setting.mapHeight / 2.0f;
+
+        var spanLongitude = halfWidthInPixels * pixelToLongitudeRatio;
+        var spanLatitude = halfHeightInPixels * pixelToLatitudeRatio;
+
+        mLeftBottomPoint.longitude = mCenterPoint.longitude - spanLongitude;
+        mLeftBottomPoint.latitude = mCenterPoint.latitude - spanLatitude;
+
+        mRightTopPoint.longitude = mCenterPoint.longitude + spanLongitude;
+        mRightTopPoint.latitude = mCenterPoint.latitude + spanLatitude;
+    }
+
+    #endregion
 
     #region :: Switch
 
@@ -122,6 +149,7 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     }
 
     #endregion
+
 
   
 }
