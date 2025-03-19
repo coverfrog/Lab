@@ -78,8 +78,10 @@ public class VWorldHelper : MonoBehaviour
         var power = Mathf.Clamp01(dir.magnitude / setting.cursorMaxPower);
 
         var speedRange = setting.cursorMaxSpeed - setting.cursorMinSpeed;
-        
-        var speed = setting.cursorMinSpeed + speedRange * (1.0f - Mathf.Clamp01((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange));
+
+        var speedPercent = 1.0f - Mathf.Clamp01((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange);
+
+        var speed = setting.cursorMinSpeed + speedRange * Mathf.Sin(Mathf.PI * 0.5f * speedPercent);
         
         var newPoint =
             new Vector2(
