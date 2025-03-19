@@ -5,6 +5,7 @@ using System.Text;
 using Cf.Yield;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
@@ -34,7 +35,10 @@ public class VWorldMapSetting : VWorldMapSettingConst
 
 public class VWorldHelper : MonoBehaviour
 {
-    [Header("Setting")]
+    [Header("Option")] 
+    [SerializeField] private float mCursorMaxSpeed = 0.075f;
+    [SerializeField] private float mCursorMinSpeed = 0.001f;
+    [SerializeField] private float mCursorMaxPower = 300.0f;
     [SerializeField] private VWorldMapSetting mMapSetting;
     
     [Header("Script")] 
@@ -42,7 +46,6 @@ public class VWorldHelper : MonoBehaviour
     
     [Header("Reference")] 
     [SerializeField] private RawImage mMapCenterRawImage;
-    [SerializeField] private RawImage[] mMapNeighborRawImages;
 
     private static readonly Dictionary<string, Texture2D[]> Cache =
         new Dictionary<string, Texture2D[]>();
@@ -51,19 +54,47 @@ public class VWorldHelper : MonoBehaviour
     {
         vWorldCursor.OnZoomInAction += OnZoomIn;
         vWorldCursor.OnZoomOutAction += OnZoomOut;
+        vWorldCursor.OnMoveAction += OnMove;
     }
 
     private void OnDisable()
     {
         vWorldCursor.OnZoomInAction -= OnZoomIn;
         vWorldCursor.OnZoomOutAction -= OnZoomOut;
+        vWorldCursor.OnMoveAction -= OnMove;
     }
 
     private void Start()
     {
         OnMapUpdate(mMapSetting);
     }
-    
+
+    private void OnMove(Vector2 prev, Vector2 now)
+    {
+        vWorldCursor.GetCenterPoint(out var mCenterPoint);
+
+        VWorldUtil.ToMipIdx(mMapSetting.mapZoomLevel, out var mipIndex);
+        
+        var dir = now - prev;
+
+        var power = Mathf.Clamp01(dir.magnitude / mCursorMaxPower);
+
+        Debug.Log((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange);
+
+        var speedRange = mCursorMaxSpeed - mCursorMinSpeed;
+        
+        var speed = mCursorMinSpeed + speedRange * (1.0f - Mathf.Clamp01((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange));
+        
+        var newPoint =
+            new Vector2(
+                mCenterPoint.latitude - power * dir.normalized.y * speed,
+                mCenterPoint.longitude - power * dir.normalized.x * speed);
+
+        vWorldCursor.SetCenterPoint(newPoint);
+        
+        OnMapUpdate(mMapSetting);
+    }
+
     private void OnZoomIn()
     {
         var nextZoom = Mathf.Min(mMapSetting.mapZoomLevel + 1, VWorldMapSettingConst.ZoomLevelMax);
@@ -88,14 +119,13 @@ public class VWorldHelper : MonoBehaviour
 
     private void OnMapUpdate(VWorldMapSetting setting)
     {
+        mMapCenterRawImage.rectTransform.sizeDelta = new Vector2(setting.mapWidth, setting.mapHeight);
+        
         var requestLevel = setting.mapZoomLevel;
 
         VWorldUtil.ToMipIdx(requestLevel, out var mipIndex);
 
-        vWorldCursor.OnCursorUpdate(mMapSetting);
         vWorldCursor.GetCenterKey(out var centerKey);
-        vWorldCursor.GetNeighboringPoints(out var neighborPoints);
-        vWorldCursor.GetNeighborKeys(neighborPoints, out var neighborKeys);
 
         if (!Cache.TryGetValue(centerKey, out var centerTextureMips))
         {
@@ -103,11 +133,7 @@ public class VWorldHelper : MonoBehaviour
             vWorldCursor.GetCenterPoint(out var centerPoint);
             
             // dict key add
-            Cache.Add(centerKey, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
-            foreach (var neighborKey in neighborKeys)
-            {
-                Cache.Add(neighborKey, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
-            }
+            _ = Cache.TryAdd(centerKey, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
             
             // self
             StartCoroutine(CoRequest(centerKey, mMapCenterRawImage, centerPoint, requestLevel, true));
@@ -122,47 +148,11 @@ public class VWorldHelper : MonoBehaviour
 
                 StartCoroutine(CoRequest(centerKey, mMapCenterRawImage, centerPoint, level, false));
             }
-            
-            // neighbor
-            for (var i = 0; i < neighborKeys.Length; i++)
-            {
-                for (var level = VWorldMapSettingConst.ZoomLevelMin; level <= VWorldMapSettingConst.ZoomLevelMax; level++)
-                {
-                    StartCoroutine(CoRequest(neighborKeys[i], mMapNeighborRawImages[i], neighborPoints[i], level, false));
-                }
-            }
         }
         
         else
         {
             mMapCenterRawImage.texture = centerTextureMips[mipIndex];
-        }
-        
-        // neighbor
-
-        for (var i = 0; i < neighborKeys.Length; i++)
-        {
-            var neighborKey = neighborKeys[i];
-            
-            if (Cache.TryGetValue(neighborKey, out var neighborTextureMips))
-            {
-                var requestNeighborTexture = neighborTextureMips[mipIndex];
-
-                if (requestNeighborTexture)
-                {
-                    mMapNeighborRawImages[i].texture = requestNeighborTexture;
-                }
-
-                else
-                {
-                    StartCoroutine(CoApplyWait(neighborKey, mipIndex, mMapNeighborRawImages[i]));
-                }
-            }
-
-            else
-            {
-                StartCoroutine(CoApplyWait(neighborKey, mipIndex, mMapNeighborRawImages[i]));
-            }
         }
     }
 
@@ -184,33 +174,5 @@ public class VWorldHelper : MonoBehaviour
         }
         
         rawImage.texture = texture;
-    }
-
-    private IEnumerator CoApplyWait(string key, int mipIndex, RawImage rawImage)
-    {
-        Texture texture = null;
-        
-        while (true)
-        {
-            if (!Cache.TryGetValue(key, out var mips))
-            {
-                yield return YieldCache.WaitForEndOfFrame;
-                
-                continue;
-            }
-
-            texture = mips[mipIndex];
-
-            if (texture)
-            {
-                break;
-            }
-
-            yield return YieldCache.WaitForEndOfFrame;
-        }
-
-        rawImage.texture = texture;
-        
-        Debug.Log("APPLY");
     }
 }

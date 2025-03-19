@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using UnityEngine;
 
@@ -32,4 +33,18 @@ public static class VWorldUtil
     {
         mipIndex = zoomLevel - VWorldMapSettingConst.ZoomLevelMin;
     }
+    
+    public static float LatitudeToMercator(float latitude)
+    {
+        latitude = Mathf.Clamp(latitude, -85.0f, 85.0f); // 제한된 범위 적용
+        float latRad = latitude * Mathf.Deg2Rad;
+        return Mathf.Log(Mathf.Tan((Mathf.PI / 4) + (latRad / 2)));
+    }
+
+    public static float MercatorToLatitude(float mercatorY)
+    {
+        float clampedValue = Mathf.Clamp(mercatorY, -3.0f, 3.0f); // 제한된 범위 내에서 변환
+        return Mathf.Clamp(Mathf.Rad2Deg * (2 * Mathf.Atan(Mathf.Exp(clampedValue)) - Mathf.PI / 2), -85.0f, 85.0f);
+    }
+
 }

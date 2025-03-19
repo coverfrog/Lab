@@ -6,27 +6,32 @@ using UnityEngine.Serialization;
 [Serializable]
 public class VWorldCursorPointConst
 {
-    protected const double InitLatitude = 37.5202991;
-    protected const double InitLongitude = 127.1214261;
+    protected const float InitLatitude = 37.5202991f;
+    protected const float InitLongitude = 127.1214261f;
 }
 
 [Serializable]
 public class VWorldCursorPoint : VWorldCursorPointConst
 {
-    public double latitude = InitLatitude;
-    public double longitude = InitLongitude;
+    public float longitude = InitLongitude;
+    public float latitude = InitLatitude;
 }
 
 public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler, IScrollHandler
 {
+    [Header("Option")] 
+    [SerializeField] private float mMoveUpdateDistance = 100.0f;
+    
+    [Header("Debug")]
     [SerializeField] private VWorldCursorPoint mCenterPoint = new VWorldCursorPoint();
-    [SerializeField] private VWorldCursorPoint mLeftBottomPoint = new VWorldCursorPoint();
-    [SerializeField] private VWorldCursorPoint mRightTopPoint = new VWorldCursorPoint();
-    [SerializeField] private VWorldCursorPoint[] mNeighborPoints;
-
+    
     public event Action OnZoomInAction; 
     public event Action OnZoomOutAction;
+    public event Action<Vector2, Vector2> OnMoveAction;
 
+    private bool _mIsLeftClick;
+    private Vector2 _mMousePointPrev;
+    
     private void Awake()
     {
         mCenterPoint = new VWorldCursorPoint();
@@ -39,77 +44,16 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
         key = ToKey(mCenterPoint);
     }
 
-    public void GetNeighborKeys(VWorldCursorPoint[] neighborPoints, out string[] neighborKeys)
-    {
-        neighborKeys = new string[neighborPoints.Length];
-        
-        for (var i = 0; i < neighborKeys.Length; i++)
-        {
-            neighborKeys[i] = ToKey(neighborPoints[i]);
-        }
-    }
-
     public void GetCenterPoint(out VWorldCursorPoint point)
     {
         point = mCenterPoint;
     }
 
-    public void GetNeighboringPoints(out VWorldCursorPoint[] neighborPoints)
+    public void SetCenterPoint(Vector2 newPoint)
     {
-        var directions = new Vector2[]
-        {
-            Vector2.up,
-            new Vector2(+1, +1).normalized,
-            Vector2.right,
-            new Vector2(+1, -1).normalized,
-            Vector2.down,
-            new Vector2(-1, -1).normalized,
-            Vector2.left,
-            new Vector2(-1, +1).normalized,
-        };
-        
-        var longitudeSize = mRightTopPoint.longitude - mLeftBottomPoint.longitude;
-        var latitudeSize = mRightTopPoint.latitude - mLeftBottomPoint.latitude;
-
-        neighborPoints = new VWorldCursorPoint[directions.Length];
-        
-        for (var i = 0; i < neighborPoints.Length; i++)
-        {
-            neighborPoints[i] = new VWorldCursorPoint()
-            {
-                longitude = mCenterPoint.longitude + directions[i].x + longitudeSize,
-                latitude = mCenterPoint.latitude + directions[i].y + latitudeSize,
-            };
-        }
-
-
-        mNeighborPoints = neighborPoints;
+        mCenterPoint.latitude = newPoint.x;
+        mCenterPoint.longitude = newPoint.y;
     }
-    
-
-    #region :: Point Update
-
-    public void OnCursorUpdate(VWorldMapSetting setting)
-    {
-        var zoomLevel = setting.mapZoomLevel;
-        
-        var pixelToLongitudeRatio = 360.0f / (Mathf.Pow(2, zoomLevel) * 256.0f);
-        var pixelToLatitudeRatio = 180.0f / (Mathf.Pow(2, zoomLevel) * 256.0f);
-
-        var halfWidthInPixels = setting.mapWidth / 2.0f;
-        var halfHeightInPixels = setting.mapHeight / 2.0f;
-
-        var spanLongitude = halfWidthInPixels * pixelToLongitudeRatio;
-        var spanLatitude = halfHeightInPixels * pixelToLatitudeRatio;
-
-        mLeftBottomPoint.longitude = mCenterPoint.longitude - spanLongitude;
-        mLeftBottomPoint.latitude = mCenterPoint.latitude - spanLatitude;
-
-        mRightTopPoint.longitude = mCenterPoint.longitude + spanLongitude;
-        mRightTopPoint.latitude = mCenterPoint.latitude + spanLatitude;
-    }
-
-    #endregion
 
     #region :: Switch
 
@@ -146,28 +90,45 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
                 throw new ArgumentOutOfRangeException();
         }
     }
+    
+
 
     #endregion
-
-    #region :: Move
 
     public void OnPointerMove(PointerEventData eventData)
     {
- 
+        if (!_mIsLeftClick)
+        {
+            return;
+        }
+
+        if (Vector2.Distance(eventData.position, _mMousePointPrev) < mMoveUpdateDistance)
+        {
+            return;
+        }
+        
+        OnMoveAction?.Invoke(_mMousePointPrev, eventData.position);
+
+        _mMousePointPrev = eventData.position;
     }
-
-    #endregion
-
+    
     #region :: Left
 
     private void OnDownLeft(PointerEventData eventData)
     {
-
+        _mIsLeftClick = true;
+        _mMousePointPrev = eventData.position;
     }
     
     private void OnUpLeft(PointerEventData eventData)
     {
+        _mIsLeftClick = false;
+        if (_mMousePointPrev == eventData.position)
+        {
+            return;
+        }
 
+        OnMoveAction?.Invoke(_mMousePointPrev, eventData.position);
     }
 
     #endregion
@@ -203,7 +164,6 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     }
 
     #endregion
-
 
   
 }
