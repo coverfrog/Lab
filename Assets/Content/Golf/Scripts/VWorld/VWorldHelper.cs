@@ -12,6 +12,7 @@ public class VWorldMapSettingConst
 {
     public const string ApiKey = "9BB69C3F-772F-36DA-AD38-4A2F7B3D90C4";
     public const string BaseUrl = "http://api.vworld.kr/req/image?service=image&request=getmap&key=";
+    public const string Epsg = "4326";
 
     public const int InitZoomLevel = 14;
     public const int InitMapWidth = 512;

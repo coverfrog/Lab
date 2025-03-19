@@ -14,7 +14,8 @@ public static class VWorldUtil
         sb.Append(vWorldCursorPoint.longitude);
         sb.Append(",");
         sb.Append(vWorldCursorPoint.latitude);
-        sb.Append("&crs=epsg:4326");
+        sb.Append("&crs=epsg:");
+        sb.Append(VWorldMapSettingConst.Epsg);
         sb.Append("&zoom=");
         sb.Append(zoomLevel);
         sb.Append("&size=");
