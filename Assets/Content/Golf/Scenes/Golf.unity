@@ -517,7 +517,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mCursorMaxSpeed: 0.075
   mCursorMinSpeed: 0.001
-  mCursorMaxPower: 300
+  mCursorMaxPower: 200
   mMapSetting:
     mapZoomLevel: 14
     mapWidth: 1024
@@ -536,8 +536,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc4996c2f19f01b41b03fbc76cb35662, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mCursorSpeed: 0.003
-  mCursorMaxPower: 300
+  mMoveUpdateDistance: 100
   mCenterPoint:
     longitude: 127.12143
     latitude: 37.520298
@@ -576,7 +575,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 512, y: 512}
+  m_SizeDelta: {x: 1024, y: 1024}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1446106326
 MonoBehaviour:

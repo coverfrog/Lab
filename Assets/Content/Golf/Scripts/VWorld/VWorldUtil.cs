@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
+
 public static class VWorldUtil
 {
     public static void ToUrl(VWorldCursorPoint vWorldCursorPoint, int zoomLevel, int mapWidth, int mapHeight, out string url, out int mipIndex)
@@ -19,6 +20,8 @@ public static class VWorldUtil
         sb.Append(VWorldMapSettingConst.Epsg);
         sb.Append("&zoom=");
         sb.Append(zoomLevel);
+        sb.Append("&type=");
+        sb.Append("w");
         sb.Append("&size=");
         sb.Append(mapWidth);
         sb.Append(",");

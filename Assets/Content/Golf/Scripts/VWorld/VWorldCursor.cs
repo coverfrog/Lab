@@ -17,10 +17,19 @@ public class VWorldCursorPoint : VWorldCursorPointConst
     public float latitude = InitLatitude;
 }
 
+[Serializable]
+public class VWorldCursorSetting
+{
+    public float cursorMaxSpeed = 0.075f;
+    public float cursorMinSpeed = 0.001f;
+    public float cursorMaxPower = 200.0f;
+    public float cursorMoveUpdateDistance=  100.0F;
+}
+
 public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler, IScrollHandler
 {
     [Header("Option")] 
-    [SerializeField] private float mMoveUpdateDistance = 100.0f;
+    [SerializeField] private VWorldCursorSetting mCursorSetting = new VWorldCursorSetting();
     
     [Header("Debug")]
     [SerializeField] private VWorldCursorPoint mCenterPoint = new VWorldCursorPoint();
@@ -53,6 +62,11 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     {
         mCenterPoint.latitude = newPoint.x;
         mCenterPoint.longitude = newPoint.y;
+    }
+
+    public void GetSetting(out VWorldCursorSetting setting)
+    {
+        setting = mCursorSetting;
     }
 
     #region :: Switch
@@ -102,7 +116,7 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
             return;
         }
 
-        if (Vector2.Distance(eventData.position, _mMousePointPrev) < mMoveUpdateDistance)
+        if (Vector2.Distance(eventData.position, _mMousePointPrev) < mCursorSetting.cursorMoveUpdateDistance)
         {
             return;
         }

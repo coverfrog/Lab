@@ -36,9 +36,6 @@ public class VWorldMapSetting : VWorldMapSettingConst
 public class VWorldHelper : MonoBehaviour
 {
     [Header("Option")] 
-    [SerializeField] private float mCursorMaxSpeed = 0.075f;
-    [SerializeField] private float mCursorMinSpeed = 0.001f;
-    [SerializeField] private float mCursorMaxPower = 300.0f;
     [SerializeField] private VWorldMapSetting mMapSetting;
     
     [Header("Script")] 
@@ -72,18 +69,17 @@ public class VWorldHelper : MonoBehaviour
     private void OnMove(Vector2 prev, Vector2 now)
     {
         vWorldCursor.GetCenterPoint(out var mCenterPoint);
+        vWorldCursor.GetSetting(out var setting);
 
         VWorldUtil.ToMipIdx(mMapSetting.mapZoomLevel, out var mipIndex);
         
         var dir = now - prev;
 
-        var power = Mathf.Clamp01(dir.magnitude / mCursorMaxPower);
+        var power = Mathf.Clamp01(dir.magnitude / setting.cursorMaxPower);
 
-        Debug.Log((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange);
-
-        var speedRange = mCursorMaxSpeed - mCursorMinSpeed;
+        var speedRange = setting.cursorMaxSpeed - setting.cursorMinSpeed;
         
-        var speed = mCursorMinSpeed + speedRange * (1.0f - Mathf.Clamp01((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange));
+        var speed = setting.cursorMinSpeed + speedRange * (1.0f - Mathf.Clamp01((mipIndex + 1) / (float)VWorldMapSettingConst.ZoomLevelRange));
         
         var newPoint =
             new Vector2(
