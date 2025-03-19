@@ -19,7 +19,7 @@ public class VWorldMapSettingConst
     
     public const int ZoomLevelMin = 7;
     public const int ZoomLevelMax = 18;
-    public const int ZoomLevelRange = ZoomLevelMax - ZoomLevelMin;
+    public const int ZoomLevelRange = ZoomLevelMax - ZoomLevelMin + 1;
 }
 
 [Serializable]
@@ -66,7 +66,7 @@ public class VWorldHelper : MonoBehaviour
     [Header("Reference")] 
     [SerializeField] private RawImage mMapRawImage;
 
-    private static readonly Dictionary<VWorldCursorPoint, Texture2D[]> ZoomCacheDict =
+    private static readonly Dictionary<VWorldCursorPoint, Texture2D[]> Cache =
         new Dictionary<VWorldCursorPoint, Texture2D[]>();
     
     private void OnEnable()
@@ -114,15 +114,15 @@ public class VWorldHelper : MonoBehaviour
 
         var zoomLevel = setting.zoomLevel;
         
-        if (!ZoomCacheDict.TryGetValue(point, out var textures))
+        if (!Cache.TryGetValue(point, out var textures))
         {
-            ZoomCacheDict.Add(point, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
+            Cache.Add(point, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
 
             setting.zoomLevel = zoomLevel;
             
-            StartCoroutine(CoZoomCacheRequest(setting, point, true));
+            StartCoroutine(CoRequest(setting, point, true));
             
-            for (var level = VWorldMapSettingConst.ZoomLevelMin; level < VWorldMapSettingConst.ZoomLevelMax; level++)
+            for (var level = VWorldMapSettingConst.ZoomLevelMin; level <= VWorldMapSettingConst.ZoomLevelMax; level++)
             {
                 if (level == zoomLevel) continue;
 
@@ -133,18 +133,17 @@ public class VWorldHelper : MonoBehaviour
                     mapWidth = setting.mapWidth,
                 };
                     
-                StartCoroutine(CoZoomCacheRequest(newSetting, point, false));
+                StartCoroutine(CoRequest(newSetting, point, false));
             }
         }
         
         else
         {
-            Debug.Log("Aplly?" + $"{zoomLevel}");
             mMapRawImage.texture = textures[setting.zoomLevel - VWorldMapSettingConst.ZoomLevelMin];
         }
     }
 
-    private IEnumerator CoZoomCacheRequest(VWorldMapSetting setting, VWorldCursorPoint point, bool apply)
+    private IEnumerator CoRequest(VWorldMapSetting setting, VWorldCursorPoint point, bool apply)
     {
         var url = setting.ToUrl(point);
 
@@ -153,9 +152,14 @@ public class VWorldHelper : MonoBehaviour
         yield return request.SendWebRequest();
 
         var texture = DownloadHandlerTexture.GetContent(request);
+
+        Cache[point][setting.zoomLevel - VWorldMapSettingConst.ZoomLevelMin] = texture;
+
+        if (!apply)
+        {
+            yield break;
+        }
         
-        ZoomCacheDict[point][setting.zoomLevel - VWorldMapSettingConst.ZoomLevelMin] = texture;
-        
-        if (apply) mMapRawImage.texture = texture;
+        mMapRawImage.texture = texture;
     }
 }

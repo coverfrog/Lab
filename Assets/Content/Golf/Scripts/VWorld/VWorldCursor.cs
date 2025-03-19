@@ -14,8 +14,6 @@ public class VWorldCursorPointConst
 {
     protected const string InitLatitude = "37.5202991";
     protected const string InitLongitude = "127.1214261";
-
-
 }
 
 [Serializable]
@@ -30,7 +28,6 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     [SerializeField] private VWorldCursorPoint mVWorldCursorPoint;
 
     public VWorldCursorPoint GetPoint() => mVWorldCursorPoint;
-    
     
     public event Action OnZoomInAction; 
     public event Action OnZoomOutAction;
@@ -72,6 +69,8 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
         
     }
 
+    #region :: Scroll
+
     public void OnScroll(PointerEventData eventData)
     {
 
@@ -85,4 +84,6 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
             OnZoomOutAction?.Invoke();
         }
     }
+
+    #endregion
 }
