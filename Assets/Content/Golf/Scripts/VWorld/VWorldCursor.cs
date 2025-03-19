@@ -22,6 +22,7 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     [SerializeField] private VWorldCursorPoint mCenterPoint = new VWorldCursorPoint();
     [SerializeField] private VWorldCursorPoint mLeftBottomPoint = new VWorldCursorPoint();
     [SerializeField] private VWorldCursorPoint mRightTopPoint = new VWorldCursorPoint();
+    [SerializeField] private VWorldCursorPoint[] mNeighborPoints;
 
     public event Action OnZoomInAction; 
     public event Action OnZoomOutAction;
@@ -80,6 +81,9 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
                 latitude = mCenterPoint.latitude + directions[i].y + latitudeSize,
             };
         }
+
+
+        mNeighborPoints = neighborPoints;
     }
     
 

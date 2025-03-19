@@ -805,8 +805,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mMapSetting:
     mapZoomLevel: 14
-    mapWidth: 1024
-    mapHeight: 1024
+    mapWidth: 512
+    mapHeight: 512
   vWorldCursor: {fileID: 1419918337}
   mMapCenterRawImage: {fileID: 1446106326}
   mMapNeighborRawImages:
