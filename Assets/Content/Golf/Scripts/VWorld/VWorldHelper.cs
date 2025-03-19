@@ -2,20 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
 using UnityEngine.Networking;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 
 [Serializable]
 public class VWorldMapSettingConst
 {
-    protected const int InitZoomLevel = 14;
-    protected const int InitMapWidth = 512;
-    protected const int InitMapHeight = 512;
+    public const string ApiKey = "9BB69C3F-772F-36DA-AD38-4A2F7B3D90C4";
+    public const string BaseUrl = "http://api.vworld.kr/req/image?service=image&request=getmap&key=";
+
+    public const int InitZoomLevel = 14;
+    public const int InitMapWidth = 512;
+    public const int InitMapHeight = 512;
     
     public const int ZoomLevelMin = 7;
     public const int ZoomLevelMax = 18;
@@ -25,34 +25,9 @@ public class VWorldMapSettingConst
 [Serializable]
 public class VWorldMapSetting : VWorldMapSettingConst
 {
-    private const string ApiKey = "9BB69C3F-772F-36DA-AD38-4A2F7B3D90C4";
-    public const string BaseUrl = "http://api.vworld.kr/req/image?service=image&request=getmap&key=";
-
-    public int zoomLevel = InitZoomLevel;
+    public int mapZoomLevel = InitZoomLevel;
     public int mapWidth = InitMapWidth;
     public int mapHeight = InitMapHeight;
-
-    public string ToUrl(VWorldCursorPoint vWorldCursorPoint)
-    {
-        var sb = new StringBuilder();
-        sb.Append(BaseUrl);
-        sb.Append(ApiKey);
-        sb.Append("&format=png");
-        sb.Append("&basemap=GRAPHIC");
-        sb.Append("&center=");
-        sb.Append(vWorldCursorPoint.longitude);
-        sb.Append(",");
-        sb.Append(vWorldCursorPoint.latitude);
-        sb.Append("&crs=epsg:4326");
-        sb.Append("&zoom=");
-        sb.Append(zoomLevel);
-        sb.Append("&size=");
-        sb.Append(mapWidth);
-        sb.Append(",");
-        sb.Append(mapHeight);
-
-        return sb.ToString();
-    }
 }
 
 public class VWorldHelper : MonoBehaviour
@@ -83,69 +58,63 @@ public class VWorldHelper : MonoBehaviour
 
     private void Start()
     {
-        OnZoom(mMapSetting);
+        OnMapUpdate(mMapSetting);
     }
     
     private void OnZoomIn()
     {
-        var nextZoom = Mathf.Min(mMapSetting.zoomLevel + 1, VWorldMapSettingConst.ZoomLevelMax);
+        var nextZoom = Mathf.Min(mMapSetting.mapZoomLevel + 1, VWorldMapSettingConst.ZoomLevelMax);
 
-        if (nextZoom == mMapSetting.zoomLevel) return;
+        if (nextZoom == mMapSetting.mapZoomLevel) return;
 
-        mMapSetting.zoomLevel = nextZoom;
+        mMapSetting.mapZoomLevel = nextZoom;
         
-        OnZoom(mMapSetting);
+        OnMapUpdate(mMapSetting);
     }
 
     private void OnZoomOut()
     {
-        var nextZoom = Mathf.Max(mMapSetting.zoomLevel - 1, VWorldMapSettingConst.ZoomLevelMin);
+        var nextZoom = Mathf.Max(mMapSetting.mapZoomLevel - 1, VWorldMapSettingConst.ZoomLevelMin);
 
-        if (nextZoom == mMapSetting.zoomLevel) return;
+        if (nextZoom == mMapSetting.mapZoomLevel) return;
         
-        mMapSetting.zoomLevel = nextZoom;
+        mMapSetting.mapZoomLevel = nextZoom;
         
-        OnZoom(mMapSetting);
+        OnMapUpdate(mMapSetting);
     }
 
-    private void OnZoom(VWorldMapSetting setting)
+    private void OnMapUpdate(VWorldMapSetting setting)
     {
         var point = vWorldCursor.GetPoint();
 
-        var zoomLevel = setting.zoomLevel;
-        
         if (!Cache.TryGetValue(point, out var textures))
         {
             Cache.Add(point, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
 
-            setting.zoomLevel = zoomLevel;
+            var requestLevel = setting.mapZoomLevel;
             
-            StartCoroutine(CoRequest(setting, point, true));
+            StartCoroutine(CoRequest(point, requestLevel, true));
             
             for (var level = VWorldMapSettingConst.ZoomLevelMin; level <= VWorldMapSettingConst.ZoomLevelMax; level++)
             {
-                if (level == zoomLevel) continue;
-
-                var newSetting = new VWorldMapSetting()
+                if (level == requestLevel)
                 {
-                    zoomLevel = level,
-                    mapHeight = setting.mapHeight,
-                    mapWidth = setting.mapWidth,
-                };
-                    
-                StartCoroutine(CoRequest(newSetting, point, false));
+                    continue;
+                }
+
+                StartCoroutine(CoRequest(point, level, false));
             }
         }
         
         else
         {
-            mMapRawImage.texture = textures[setting.zoomLevel - VWorldMapSettingConst.ZoomLevelMin];
+            mMapRawImage.texture = textures[setting.mapZoomLevel - VWorldMapSettingConst.ZoomLevelMin];
         }
     }
 
-    private IEnumerator CoRequest(VWorldMapSetting setting, VWorldCursorPoint point, bool apply)
+    private IEnumerator CoRequest(VWorldCursorPoint point, int zoomLevel, bool apply)
     {
-        var url = setting.ToUrl(point);
+        VWorldUtil.ToUrl(point, zoomLevel, mMapSetting.mapWidth, mMapSetting.mapHeight, out var url, out var cacheIndex);
 
         using var request = UnityWebRequestTexture.GetTexture(url);
 
@@ -153,7 +122,7 @@ public class VWorldHelper : MonoBehaviour
 
         var texture = DownloadHandlerTexture.GetContent(request);
 
-        Cache[point][setting.zoomLevel - VWorldMapSettingConst.ZoomLevelMin] = texture;
+        Cache[point][cacheIndex] = texture;
 
         if (!apply)
         {

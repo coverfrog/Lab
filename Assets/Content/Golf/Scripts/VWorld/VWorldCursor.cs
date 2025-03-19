@@ -1,29 +1,22 @@
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.Serialization;
-
-public enum VWorldCursorState
-{
-    Idle,
-    MoveMode,
-}
 
 [Serializable]
 public class VWorldCursorPointConst
 {
-    protected const string InitLatitude = "37.5202991";
-    protected const string InitLongitude = "127.1214261";
+    protected const double InitLatitude = 37.5202991;
+    protected const double InitLongitude = 127.1214261;
 }
 
 [Serializable]
 public class VWorldCursorPoint : VWorldCursorPointConst
 {
-    public string latitude = InitLatitude;
-    public string longitude = InitLongitude;
+    public double latitude = InitLatitude;
+    public double longitude = InitLongitude;
 }
 
-public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IScrollHandler
+public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHandler, IPointerUpHandler, IScrollHandler
 {
     [SerializeField] private VWorldCursorPoint mVWorldCursorPoint;
 
@@ -36,6 +29,8 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     {
         mVWorldCursorPoint = new VWorldCursorPoint();
     }
+
+    #region :: Switch
 
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -54,21 +49,62 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
         }
     }
     
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        switch (eventData.button)
+        {
+            case PointerEventData.InputButton.Left:
+                OnUpLeft(eventData);
+                break;
+            case PointerEventData.InputButton.Right:
+                OnUpRight(eventData);
+                break;
+            case PointerEventData.InputButton.Middle:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    #endregion
+
+    #region :: Move
+
     public void OnPointerMove(PointerEventData eventData)
     {
  
     }
 
+    #endregion
+
+    #region :: Left
+
     private void OnDownLeft(PointerEventData eventData)
     {
 
     }
+    
+    private void OnUpLeft(PointerEventData eventData)
+    {
+
+    }
+
+    #endregion
+
+    #region :: Right
 
     private void OnDownRight(PointerEventData eventData)
     {
         
     }
 
+    private void OnUpRight(PointerEventData eventData)
+    {
+        
+    }
+
+    #endregion
+    
     #region :: Scroll
 
     public void OnScroll(PointerEventData eventData)
@@ -86,4 +122,6 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     }
 
     #endregion
+
+  
 }
