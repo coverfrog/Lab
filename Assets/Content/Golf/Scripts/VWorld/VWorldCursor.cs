@@ -23,8 +23,6 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     [SerializeField] private VWorldCursorPoint mLeftBottomPoint = new VWorldCursorPoint();
     [SerializeField] private VWorldCursorPoint mRightTopPoint = new VWorldCursorPoint();
 
-    public VWorldCursorPoint GetCenterPoint() => mCenterPoint;
-    
     public event Action OnZoomInAction; 
     public event Action OnZoomOutAction;
 
@@ -32,6 +30,58 @@ public class VWorldCursor : MonoBehaviour, IPointerDownHandler, IPointerMoveHand
     {
         mCenterPoint = new VWorldCursorPoint();
     }
+
+    private static string ToKey(VWorldCursorPoint point) => $"{point.longitude}_{point.latitude}";
+
+    public void GetCenterKey(out string key)
+    {
+        key = ToKey(mCenterPoint);
+    }
+
+    public void GetNeighborKeys(VWorldCursorPoint[] neighborPoints, out string[] neighborKeys)
+    {
+        neighborKeys = new string[neighborPoints.Length];
+        
+        for (var i = 0; i < neighborKeys.Length; i++)
+        {
+            neighborKeys[i] = ToKey(neighborPoints[i]);
+        }
+    }
+
+    public void GetCenterPoint(out VWorldCursorPoint point)
+    {
+        point = mCenterPoint;
+    }
+
+    public void GetNeighboringPoints(out VWorldCursorPoint[] neighborPoints)
+    {
+        var directions = new Vector2[]
+        {
+            Vector2.up,
+            new Vector2(+1, +1).normalized,
+            Vector2.right,
+            new Vector2(+1, -1).normalized,
+            Vector2.down,
+            new Vector2(-1, -1).normalized,
+            Vector2.left,
+            new Vector2(-1, +1).normalized,
+        };
+        
+        var longitudeSize = mRightTopPoint.longitude - mLeftBottomPoint.longitude;
+        var latitudeSize = mRightTopPoint.latitude - mLeftBottomPoint.latitude;
+
+        neighborPoints = new VWorldCursorPoint[directions.Length];
+        
+        for (var i = 0; i < neighborPoints.Length; i++)
+        {
+            neighborPoints[i] = new VWorldCursorPoint()
+            {
+                longitude = mCenterPoint.longitude + directions[i].x + longitudeSize,
+                latitude = mCenterPoint.latitude + directions[i].y + latitudeSize,
+            };
+        }
+    }
+    
 
     #region :: Point Update
 

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public static class VWorldUtil
 {
-    public static void ToUrl(VWorldCursorPoint vWorldCursorPoint, int zoomLevel, int mapWidth, int mapHeight, out string url, out int cacheIndex)
+    public static void ToUrl(VWorldCursorPoint vWorldCursorPoint, int zoomLevel, int mapWidth, int mapHeight, out string url, out int mipIndex)
     {
         var sb = new StringBuilder();
         sb.Append(VWorldMapSettingConst.BaseUrl);
@@ -24,6 +24,12 @@ public static class VWorldUtil
         sb.Append(mapHeight);
 
         url = sb.ToString();
-        cacheIndex = zoomLevel - VWorldMapSettingConst.ZoomLevelMin;
+
+        ToMipIdx(zoomLevel, out mipIndex);
+    }
+    
+    public static void ToMipIdx(int zoomLevel, out int mipIndex)
+    {
+        mipIndex = zoomLevel - VWorldMapSettingConst.ZoomLevelMin;
     }
 }

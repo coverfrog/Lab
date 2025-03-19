@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using Cf.Yield;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -40,10 +41,11 @@ public class VWorldHelper : MonoBehaviour
     [SerializeField] private VWorldCursor vWorldCursor;
     
     [Header("Reference")] 
-    [SerializeField] private RawImage mMapRawImage;
+    [SerializeField] private RawImage mMapCenterRawImage;
+    [SerializeField] private RawImage[] mMapNeighborRawImages;
 
-    private static readonly Dictionary<VWorldCursorPoint, Texture2D[]> Cache =
-        new Dictionary<VWorldCursorPoint, Texture2D[]>();
+    private static readonly Dictionary<string, Texture2D[]> Cache =
+        new Dictionary<string, Texture2D[]>();
     
     private void OnEnable()
     {
@@ -86,18 +88,31 @@ public class VWorldHelper : MonoBehaviour
 
     private void OnMapUpdate(VWorldMapSetting setting)
     {
+        var requestLevel = setting.mapZoomLevel;
+
+        VWorldUtil.ToMipIdx(requestLevel, out var mipIndex);
+
         vWorldCursor.OnCursorUpdate(mMapSetting);
-        
-        var point = vWorldCursor.GetCenterPoint();
+        vWorldCursor.GetCenterKey(out var centerKey);
+        vWorldCursor.GetNeighboringPoints(out var neighborPoints);
+        vWorldCursor.GetNeighborKeys(neighborPoints, out var neighborKeys);
 
-        if (!Cache.TryGetValue(point, out var textures))
+        if (!Cache.TryGetValue(centerKey, out var centerTextureMips))
         {
-            Cache.Add(point, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
-
-            var requestLevel = setting.mapZoomLevel;
+            // center
+            vWorldCursor.GetCenterPoint(out var centerPoint);
             
-            StartCoroutine(CoRequest(point, requestLevel, true));
+            // dict key add
+            Cache.Add(centerKey, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
+            foreach (var neighborKey in neighborKeys)
+            {
+                Cache.Add(neighborKey, new Texture2D[VWorldMapSettingConst.ZoomLevelRange]);
+            }
             
+            // self
+            StartCoroutine(CoRequest(centerKey, mMapCenterRawImage, centerPoint, requestLevel, true));
+            
+            // mip
             for (var level = VWorldMapSettingConst.ZoomLevelMin; level <= VWorldMapSettingConst.ZoomLevelMax; level++)
             {
                 if (level == requestLevel)
@@ -105,19 +120,55 @@ public class VWorldHelper : MonoBehaviour
                     continue;
                 }
 
-                StartCoroutine(CoRequest(point, level, false));
+                StartCoroutine(CoRequest(centerKey, mMapCenterRawImage, centerPoint, level, false));
+            }
+            
+            // neighbor
+            for (var i = 0; i < neighborKeys.Length; i++)
+            {
+                for (var level = VWorldMapSettingConst.ZoomLevelMin; level <= VWorldMapSettingConst.ZoomLevelMax; level++)
+                {
+                    StartCoroutine(CoRequest(neighborKeys[i], mMapNeighborRawImages[i], neighborPoints[i], level, false));
+                }
             }
         }
         
         else
         {
-            mMapRawImage.texture = textures[setting.mapZoomLevel - VWorldMapSettingConst.ZoomLevelMin];
+            mMapCenterRawImage.texture = centerTextureMips[mipIndex];
+        }
+        
+        // neighbor
+
+        for (var i = 0; i < neighborKeys.Length; i++)
+        {
+            var neighborKey = neighborKeys[i];
+            
+            if (Cache.TryGetValue(neighborKey, out var neighborTextureMips))
+            {
+                var requestNeighborTexture = neighborTextureMips[mipIndex];
+
+                if (requestNeighborTexture)
+                {
+                    mMapNeighborRawImages[i].texture = requestNeighborTexture;
+                }
+
+                else
+                {
+                    StartCoroutine(CoApplyWait(neighborKey, mipIndex, mMapNeighborRawImages[i]));
+                }
+            }
+
+            else
+            {
+                StartCoroutine(CoApplyWait(neighborKey, mipIndex, mMapNeighborRawImages[i]));
+            }
         }
     }
 
-    private IEnumerator CoRequest(VWorldCursorPoint point, int zoomLevel, bool apply)
+    private IEnumerator CoRequest(string key, RawImage rawImage, VWorldCursorPoint point, int zoomLevel, bool apply)
     {
-        VWorldUtil.ToUrl(point, zoomLevel, mMapSetting.mapWidth, mMapSetting.mapHeight, out var url, out var cacheIndex);
+        VWorldUtil.ToUrl(point, zoomLevel, mMapSetting.mapWidth, mMapSetting.mapHeight, out var url, out var mipIndex);
 
         using var request = UnityWebRequestTexture.GetTexture(url);
 
@@ -125,13 +176,41 @@ public class VWorldHelper : MonoBehaviour
 
         var texture = DownloadHandlerTexture.GetContent(request);
 
-        Cache[point][cacheIndex] = texture;
+        Cache[key][mipIndex] = texture;
 
         if (!apply)
         {
             yield break;
         }
         
-        mMapRawImage.texture = texture;
+        rawImage.texture = texture;
+    }
+
+    private IEnumerator CoApplyWait(string key, int mipIndex, RawImage rawImage)
+    {
+        Texture texture = null;
+        
+        while (true)
+        {
+            if (!Cache.TryGetValue(key, out var mips))
+            {
+                yield return YieldCache.WaitForEndOfFrame;
+                
+                continue;
+            }
+
+            texture = mips[mipIndex];
+
+            if (texture)
+            {
+                break;
+            }
+
+            yield return YieldCache.WaitForEndOfFrame;
+        }
+
+        rawImage.texture = texture;
+        
+        Debug.Log("APPLY");
     }
 }
