@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>center</title>
+<SCRIPT language="JavaScript" type="text/javascript" src="http://map.vworld.kr/js/vworldMapInit.js.do?apiKey=659946E4-AFCC-3A8E-A9DD-A1833F796908"></SCRIPT>
+<script type="text/javascript">
+var map = null;
+vworld.showMode = false;
+vworld.init(
+"cont1"
+, "map-first"
+,function() {
+map = this.vmap;
+map.setGrid(true);
+map.setBaseLayer(map.vworldBaseMap);
+map.setControlsType({"simpleMap":true});
+map.setCenterAndZoom(14134975.826087, 4519054.8257785, 14);
+}
+,function (obj){SOPPlugin = obj; }
+,function (msg){alert('oh my god');}
+);
+function setModeCallback(){
+vworld.setModeCallback(modecallback);
+}
+</script>
+</head>
+<body>
+<div id="cont1" style="width:1300px;height:800px;"></div>
+</body>
+</html>
