@@ -1,30 +1,80 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="ko">
+
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>center</title>
-<SCRIPT language="JavaScript" type="text/javascript" src="http://map.vworld.kr/js/vworldMapInit.js.do?apiKey=659946E4-AFCC-3A8E-A9DD-A1833F796908"></SCRIPT>
-<script type="text/javascript">
-var map = null;
-vworld.showMode = false;
-vworld.init(
-"cont1"
-, "map-first"
-,function() {
-map = this.vmap;
-map.setBaseLayer(map.vworldBaseMap);
-map.setControlsType({"simpleMap":true});
-map.setCenterAndZoom(14134975.826087, 4519054.8257785, 14);
-}
-,function (obj){SOPPlugin = obj; }
-,function (msg){alert('oh my god');}
-);
-function setModeCallback(){
-vworld.setModeCallback(modecallback);
-}
-</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VWorld Map</title>
+
+    <style>
+        #map {
+            width: 1000px;
+            height: 600px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            margin: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+        }
+
+        .vw-notice {
+            display: none;
+        }
+    </style>
+
+    <script type="text/javascript"
+        src="http://map.vworld.kr/js/vworldMapInit.js.do?version=2.0&apiKey=7496A87B-9965-3447-969A-6411CBC91ADB"></script>
+
+    <script type="text/javascript">
+
+        var latitude = null;
+        var longitude = null;
+        var zoomLevel = null;
+
+        function initMap() {
+
+            latitude = 14134975.826087;
+            longitude = 4519054.8257785;
+            zoomLevel = 14;
+
+            vw.MapControllerOption = {
+                container: "map",
+                mapMode: "2d-map",
+                basemapType: vw.ol3.BasemapType.GRAPHIC,
+                controlDensity: vw.ol3.DensityType.EMPTY,
+                interactionDensity: vw.ol3.DensityType.BASIC,
+                controlsAutoArrange: true,
+                homePosition: vw.ol3.CameraPosition,
+                initPosition: vw.ol3.CameraPosition,
+            };
+
+            vw.MapController = new vw.MapController(vw.MapControllerOption);
+        }
+
+        function ChangeBaseMap(){
+
+            var loadBaseMapType;
+
+            if (vw.MapController.option.basemapType == 'photo'){
+                loadBaseMapType = 'graphic';
+            }
+            else{
+                loadBaseMapType = 'photo';
+            }
+
+            vw._vmap.setBasemapType(loadBaseMapType);
+        }
+        
+    </script>
 </head>
-<body>
-<div id="cont1" style="width:1300px;height:800px;"></div>
+
+<body onload="initMap()">
+    <!--<h2>VWorld 2D 지도</h2>-->
+    <div id="map"></div>
+    <p id="info">위도: -, 경도: -, 줌 레벨: -</p>
+    <button onclick="ChangeBaseMap()"> click </button>
 </body>
+
 </html>
