@@ -1,7 +1,11 @@
 {
-    "name": "Cf.Yield",
-    "rootNamespace": "Cf.Yield",
-    "references": [],
+    "name": "Rdd.CfSteam",
+    "rootNamespace": "Rdd.CfSteam",
+    "references": [
+        "GUID:896357782a43eab498700e5d241fac8a",
+        "GUID:b619c23b94b66264d94b573f7d26e4d7",
+        "GUID:1491147abca9d7d4bb7105af628b223e"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

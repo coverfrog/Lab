@@ -29,15 +29,11 @@
 
     <script type="text/javascript">
 
-        var latitude = null;
-        var longitude = null;
-        var zoomLevel = null;
+        var zoomLevel = 14;
 
         function initMap() {
 
-            latitude = 14134975.826087;
-            longitude = 4519054.8257785;
-            zoomLevel = 14;
+            vw.ol3.CameraPosition.zoom = zoomLevel;
 
             vw.MapControllerOption = {
                 container: "map",
@@ -56,6 +52,7 @@
         function ChangeBaseMap(){
 
             var loadBaseMapType;
+            var loadBaseInnerText;
 
             if (vw.MapController.option.basemapType == 'photo'){
                 loadBaseMapType = 'graphic';
@@ -64,7 +61,16 @@
                 loadBaseMapType = 'photo';
             }
 
+            if (vw.MapController.option.basemapType == 'photo'){
+                loadBaseInnerText = 'Photo';
+            }
+            else{
+                loadBaseInnerText = 'Graphic';
+            }
+
             vw._vmap.setBasemapType(loadBaseMapType);
+
+            document.getElementById('changeBaseMap').innerText = 'To ' + loadBaseInnerText;
         }
         
     </script>
@@ -73,8 +79,7 @@
 <body onload="initMap()">
     <!--<h2>VWorld 2D 지도</h2>-->
     <div id="map"></div>
-    <p id="info">위도: -, 경도: -, 줌 레벨: -</p>
-    <button onclick="ChangeBaseMap()"> click </button>
+    <button onclick="ChangeBaseMap()" id = "changeBaseMap"> To Photo </button>
 </body>
 
 </html>

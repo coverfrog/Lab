@@ -1,0 +1,18 @@
+{
+    "name": "Rdd",
+    "rootNamespace": "Rdd",
+    "references": [
+        "GUID:896357782a43eab498700e5d241fac8a",
+        "GUID:f30f5ff1eddd9044c9c6a3d725f93034",
+        "GUID:96560d54974bc514d8fb10f6a2bfad30"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
