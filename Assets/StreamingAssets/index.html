@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ko">
 
 <head>
@@ -18,6 +17,10 @@
             padding: 5px 10px;
             font-size: 16px;
         }
+        
+        .normal-text{
+            margin: 10px;
+        }
 
         .vw-notice {
             display: none;
@@ -29,11 +32,9 @@
 
     <script type="text/javascript">
 
-        var zoomLevel = 14;
+        let zoomLevel = 9;
 
         function initMap() {
-
-            vw.ol3.CameraPosition.zoom = zoomLevel;
 
             vw.MapControllerOption = {
                 container: "map",
@@ -47,21 +48,38 @@
             };
 
             vw.MapController = new vw.MapController(vw.MapControllerOption);
+            
+            vw._vmap.getView().on('change:resolution', function(){
+                OnSetZoomLevel();
+            });
+
+            vw._vmap.getView().setZoom(zoomLevel);
+        }
+        
+        function OnSetZoomLevel(){
+
+            zoomLevel = GetZoomLevel();
+            
+            document.getElementById('zoomLevel').innerText = 'Zoom Level : ' + zoomLevel;
+        }
+        
+        function GetZoomLevel(){
+            return vw._vmap.getView().getZoom();
         }
 
         function ChangeBaseMap(){
 
-            var loadBaseMapType;
-            var loadBaseInnerText;
+            let loadBaseMapType;
+            let loadBaseInnerText;
 
-            if (vw.MapController.option.basemapType == 'photo'){
+            if (vw.MapController.option.basemapType === 'photo'){
                 loadBaseMapType = 'graphic';
             }
             else{
                 loadBaseMapType = 'photo';
             }
 
-            if (vw.MapController.option.basemapType == 'photo'){
+            if (vw.MapController.option.basemapType === 'photo'){
                 loadBaseInnerText = 'Photo';
             }
             else{
@@ -73,6 +91,16 @@
             document.getElementById('changeBaseMap').innerText = 'To ' + loadBaseInnerText;
         }
         
+        window.addEventListener('click', function (e){
+            
+            let htmlPoint = [e.x, e.y];
+            let worldPoint = vw._vmap.getCoordinateFromPixel(htmlPoint);
+            
+            console.log(worldPoint);
+        
+            
+        })
+        
     </script>
 </head>
 
@@ -80,6 +108,7 @@
     <!--<h2>VWorld 2D 지도</h2>-->
     <div id="map"></div>
     <button onclick="ChangeBaseMap()" id = "changeBaseMap"> To Photo </button>
+    <div id='zoomLevel' style="margin: 12px"> Zoom Level : - </div>
 </body>
 
 </html>
