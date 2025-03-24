@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Rdd.CfUi
 {
-    public class UITitle : UIPage
+    public class UITitle : UIPageOverlay
     {
         
     }

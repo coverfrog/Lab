@@ -30,8 +30,6 @@ namespace Rdd
         {
             yield return CoLoadUi();
             yield return CoLoadSteam();
-            
-            _mSteamManager.UpdateRooms();
         }
 
         /// <summary>

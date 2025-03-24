@@ -6,7 +6,6 @@ namespace Rdd.CfUi
     {
         Overlay,
         Camera,
-        World,
     }
 
     public abstract class UICanvas : MonoBehaviour

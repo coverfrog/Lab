@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Rdd.CfSteam
 {
-    public class SteamManager : Singleton<SteamManager>
+    public partial class SteamManager : Singleton<SteamManager>
     {
         [Header("Reference")]
         [SerializeField] private NetworkManager mNetworkManager;
@@ -36,11 +36,34 @@ namespace Rdd.CfSteam
         /// </summary>
         private void Start()
         {
+            // 프리팹 로드
             mNetworkManager.NetworkConfig = new NetworkConfig()
             {
                 NetworkTransport = mTransport,
                 TickRate = 60,
             };
+        }
+
+        /// <summary>
+        /// 콜백 등록 ( SteamCallbackManager.cs , Partial Class )
+        /// </summary>
+        private void OnEnable()
+        {
+            // 콜백 등록
+            SteamMatchmaking.OnLobbyCreated += SteamMatchmakingOnOnLobbyCreated;
+            SteamMatchmaking.OnLobbyEntered += SteamMatchmakingOnOnLobbyEntered;
+            SteamFriends.OnGameLobbyJoinRequested += SteamFriendsOnOnGameLobbyJoinRequested;
+        }
+
+        /// <summary>
+        /// 콜백 해제 ( SteamCallbackManager.cs , Partial Class )
+        /// </summary>
+        private void OnDisable()
+        {
+            // 콜백 해제
+            SteamMatchmaking.OnLobbyCreated -= SteamMatchmakingOnOnLobbyCreated;
+            SteamMatchmaking.OnLobbyEntered -= SteamMatchmakingOnOnLobbyEntered;
+            SteamFriends.OnGameLobbyJoinRequested -= SteamFriendsOnOnGameLobbyJoinRequested;
         }
 
         /// <summary>
@@ -74,5 +97,36 @@ namespace Rdd.CfSteam
         }
 
         public event Action<int, int[], string[]> OnUpdateRooms;
+
+        /// <summary>
+        /// 혹시 모를 Null 대비
+        /// </summary>
+        public bool IsInit => mTransport != null && mNetworkManager != null && mNetworkManager.NetworkConfig != null;
+        
+        /// <summary>
+        /// 방 생성 시작
+        /// </summary>
+        public void CreateRoom()
+        {
+            if (!IsInit)
+            {
+                return;
+            }
+
+            Debug.Log("Creating room");
+        }
+        
+        /// <summary>
+        /// 방 입장 시작
+        /// </summary>
+        public void JoinRoom()
+        {
+            if (!IsInit)
+            {
+                return;
+            }
+            
+            Debug.Log("Joining room");
+        }
     }
 }
