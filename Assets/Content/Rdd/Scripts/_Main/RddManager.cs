@@ -11,7 +11,16 @@ namespace Rdd
     {
         private SteamManager _mSteamManager;
         private UIManager _mUIManager;
-        
+
+        /// <summary>
+        /// 시작 하자 자기 자신 바로 호출
+        /// </summary>
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        public static void Init()
+        {
+            _ = Instance;
+        }
+
         /// <summary>
         /// 기초 라이브러리 로딩
         /// 방 목록 초기화
