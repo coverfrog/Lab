@@ -17,6 +17,8 @@ namespace Rdd.CfSteam
         [SerializeField] private NetworkManager mNetworkManager;
         [SerializeField] private FacepunchTransport mTransport;
 
+        private Lobby? _mCurrentLobby;
+        
         /// <summary>
         /// 컴포넌트 추가
         /// </summary>
@@ -50,9 +52,9 @@ namespace Rdd.CfSteam
         private void OnEnable()
         {
             // 콜백 등록
-            SteamMatchmaking.OnLobbyCreated += SteamMatchmakingOnOnLobbyCreated;
-            SteamMatchmaking.OnLobbyEntered += SteamMatchmakingOnOnLobbyEntered;
-            SteamFriends.OnGameLobbyJoinRequested += SteamFriendsOnOnGameLobbyJoinRequested;
+            SteamMatchmaking.OnLobbyCreated += SteamMatchmakingOnLobbyCreated;
+            SteamMatchmaking.OnLobbyEntered += SteamMatchmakingOnLobbyEntered;
+            SteamFriends.OnGameLobbyJoinRequested += SteamFriendsOnGameLobbyJoinRequested;
         }
 
         /// <summary>
@@ -61,9 +63,9 @@ namespace Rdd.CfSteam
         private void OnDisable()
         {
             // 콜백 해제
-            SteamMatchmaking.OnLobbyCreated -= SteamMatchmakingOnOnLobbyCreated;
-            SteamMatchmaking.OnLobbyEntered -= SteamMatchmakingOnOnLobbyEntered;
-            SteamFriends.OnGameLobbyJoinRequested -= SteamFriendsOnOnGameLobbyJoinRequested;
+            SteamMatchmaking.OnLobbyCreated -= SteamMatchmakingOnLobbyCreated;
+            SteamMatchmaking.OnLobbyEntered -= SteamMatchmakingOnLobbyEntered;
+            SteamFriends.OnGameLobbyJoinRequested -= SteamFriendsOnGameLobbyJoinRequested;
         }
 
         /// <summary>
@@ -106,19 +108,16 @@ namespace Rdd.CfSteam
         /// <summary>
         /// 방 생성 시작
         /// </summary>
-        public void CreateRoom(out Func<bool> isRun, out Func<bool> isSuccess)
+        public static async void CreateRoom(int maxMembers = 10)
         {
-            if (!IsInit)
+            try
             {
-                isRun = () => false;
-                isSuccess = () => false;
-                return;
+                await SteamMatchmaking.CreateLobbyAsync(maxMembers);
             }
-
-            Debug.Log("Creating room");
-            
-            isRun = () => true;
-            isSuccess = () => true;
+            catch 
+            {
+                // ignore
+            }
         }
         
         /// <summary>

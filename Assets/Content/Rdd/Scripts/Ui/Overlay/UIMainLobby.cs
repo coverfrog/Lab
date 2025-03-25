@@ -18,6 +18,9 @@ namespace Rdd.CfUi
         private IEnumerator _mCoCreateRoom;
         private IEnumerator _mCoJoinRoom;
         private IEnumerator _mCoEnterRoom;
+
+        private bool _misCreateRoomResponse;
+        private bool _misJoinRoomResponse;
         
         /// <summary>
         /// 컴포넌트 추가
@@ -37,6 +40,7 @@ namespace Rdd.CfUi
 
         /// <summary>
         /// 코루틴 초기화
+        /// Response Flag 초기화
         /// </summary>
         private void OnDisable()
         {
@@ -49,6 +53,11 @@ namespace Rdd.CfUi
             
             if (_mCoEnterRoom != null) StopCoroutine(_mCoEnterRoom);
             _mCoEnterRoom = null;
+            
+            // Response Flag 초기화
+            _misCreateRoomResponse = false;
+            _misJoinRoomResponse = false;
+            
         }
 
         /// <summary>
@@ -89,7 +98,7 @@ namespace Rdd.CfUi
             _mCoCreateRoom = CoOnClickCreateRoom();
             StartCoroutine(_mCoCreateRoom);
         }
-
+        
         /// <summary>
         /// 방 만들기
         /// </summary>
@@ -100,18 +109,17 @@ namespace Rdd.CfUi
             InteractableAll(false);
             
             // 요청
-            SteamManager.Instance.CreateRoom(out Func<bool> isRun, out Func<bool> isSuccess);
-
-            // 요청 대기
-            while (isRun()) yield return null;
+            SteamManager.CreateRoom();
             
-            // 결과에 따라서 Null
-            if (isSuccess())
+            // 요청 대기
+            _misCreateRoomResponse = true;
+            
+            while (_misCreateRoomResponse)
             {
-                OnEnterRoom();
-                yield break;
+                yield return null;
             }
 
+            // Null
             _mCoCreateRoom = null;
         }
 

@@ -12,7 +12,7 @@ namespace Rdd.CfUi
         /// 제일 Top 으로 Load
         /// 주의 : 닫을 떄는 무조건 UIManager 의 CloseOverlayTop 호출
         /// </summary>
-        public void OnEnable()
+        public virtual void OnEnable()
         {
             // UI 매니저의 Stack 에 등록
             UIManager.Instance.OnOpenOverlay(this);
