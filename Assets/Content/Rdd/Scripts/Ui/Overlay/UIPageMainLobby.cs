@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Rdd.CfUi
 {
-    public class UIMainLobby : UIPageOverlay
+    public class UIPageMainLobby : UIPage
     {
         [Header("Reference")] 
         [SerializeField] private UIRoomSlotGroup mUIRoomSlotGroup;
@@ -20,6 +20,8 @@ namespace Rdd.CfUi
         private IEnumerator _mCoEnterRoom;
 
         private bool _misCreateRoomResponse;
+        private bool _misCreateRoomSuccess;
+
         private bool _misJoinRoomResponse;
         
         /// <summary>
@@ -39,11 +41,27 @@ namespace Rdd.CfUi
         }
 
         /// <summary>
+        /// 전역 이벤트 등록
+        /// </summary>
+        public override void OnEnable()
+        {
+            // Base
+            base.OnEnable();
+            
+            // 전역 이벤트 등록
+            SteamManager.Instance.OnLobbyCreated += OnLobbyCreated;
+        }
+
+        /// <summary>
+        /// 전역 이벤트 해제
         /// 코루틴 초기화
         /// Response Flag 초기화
         /// </summary>
         private void OnDisable()
         {
+            // 전역 이벤트 해제
+            if (SteamManager.Instance) SteamManager.Instance.OnLobbyCreated -= OnLobbyCreated;
+            
             // 코루틴 초기화
             if (_mCoCreateRoom != null) StopCoroutine(_mCoCreateRoom);
             _mCoCreateRoom = null;
@@ -56,8 +74,9 @@ namespace Rdd.CfUi
             
             // Response Flag 초기화
             _misCreateRoomResponse = false;
-            _misJoinRoomResponse = false;
+            _misCreateRoomSuccess = false;
             
+            _misJoinRoomResponse = false;
         }
 
         /// <summary>
@@ -80,7 +99,7 @@ namespace Rdd.CfUi
         }
 
         /// <summary>
-        /// 모든 버튼 활성화
+        /// 모든 버튼 활성화 컨트롤
         /// </summary>
         private void InteractableAll(bool interactable)
         {
@@ -98,7 +117,17 @@ namespace Rdd.CfUi
             _mCoCreateRoom = CoOnClickCreateRoom();
             StartCoroutine(_mCoCreateRoom);
         }
-        
+
+        /// <summary>
+        /// 방 만들기 전역 콜백
+        /// </summary>
+        /// <param name="isSuccess"></param>
+        private void OnLobbyCreated(bool isSuccess)
+        {
+            _misCreateRoomSuccess = isSuccess;
+            _misCreateRoomResponse = false;
+        }
+
         /// <summary>
         /// 방 만들기
         /// </summary>
@@ -118,9 +147,17 @@ namespace Rdd.CfUi
             {
                 yield return null;
             }
+            
+            // 콜백 
+            if (_misCreateRoomSuccess)
+            {
+                OnEnterRoom();
+            }
 
-            // Null
-            _mCoCreateRoom = null;
+            else
+            {
+                _mCoCreateRoom = null;
+            }
         }
 
         /// <summary>
@@ -147,7 +184,12 @@ namespace Rdd.CfUi
             SteamManager.Instance.JoinRoom();
 
             // 요청 대기
-            yield return null;
+            _misJoinRoomResponse = true;
+
+            while (_misJoinRoomResponse)
+            {
+                yield return null;
+            }
             
             // 결과에 따라서 Null
             _mCoJoinRoom = null;
@@ -161,7 +203,7 @@ namespace Rdd.CfUi
             if (_mCoEnterRoom != null) return;
             
             _mCoEnterRoom = CoEnterRoom();
-            StartCoroutine(_mCoCreateRoom);
+            StartCoroutine(_mCoEnterRoom);
         }
 
         /// <summary>
@@ -170,15 +212,23 @@ namespace Rdd.CfUi
         /// <returns></returns>
         private IEnumerator CoEnterRoom()
         {
-            // Room Scene 요청
-            // todo : ui loading 화면 애니메이션 추가 필요
-            Debug.Log("Entering room");
-            
+            // UI Get
+            if (!UIManager.Instance.GetPage(out UIPageRoom uiPageRoom))
+            {
+                _mCoEnterRoom = null;
+                
+                yield break;
+            }
+
+            // UI 열기
+            uiPageRoom.SetActive(true);
+
             // 요청 대기
             yield return null;
             
-            // Null
-            _mCoEnterRoom = null;
+            // 자기 자신 종료
+            // Null 은 OnDisable 에서 진행
+            SetActive(false);
         }
     }
 }
