@@ -17,6 +17,7 @@ namespace Rdd.CfUi
 
         private IEnumerator _mCoCreateRoom;
         private IEnumerator _mCoJoinRoom;
+        private IEnumerator _mCoEnterRoom;
         
         /// <summary>
         /// 컴포넌트 추가
@@ -45,6 +46,9 @@ namespace Rdd.CfUi
             
             if (_mCoJoinRoom != null) StopCoroutine(_mCoJoinRoom);
             _mCoJoinRoom = null;
+            
+            if (_mCoEnterRoom != null) StopCoroutine(_mCoEnterRoom);
+            _mCoEnterRoom = null;
         }
 
         /// <summary>
@@ -104,6 +108,7 @@ namespace Rdd.CfUi
             // 결과에 따라서 Null
             if (isSuccess())
             {
+                OnEnterRoom();
                 yield break;
             }
 
@@ -138,6 +143,34 @@ namespace Rdd.CfUi
             
             // 결과에 따라서 Null
             _mCoJoinRoom = null;
+        }
+
+        /// <summary>
+        /// 방 입장 ( 코루틴 호출 )
+        /// </summary>
+        private void OnEnterRoom()
+        {
+            if (_mCoEnterRoom != null) return;
+            
+            _mCoEnterRoom = CoEnterRoom();
+            StartCoroutine(_mCoCreateRoom);
+        }
+
+        /// <summary>
+        /// 방 입장
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator CoEnterRoom()
+        {
+            // Room Scene 요청
+            // todo : ui loading 화면 애니메이션 추가 필요
+            Debug.Log("Entering room");
+            
+            // 요청 대기
+            yield return null;
+            
+            // Null
+            _mCoEnterRoom = null;
         }
     }
 }
