@@ -106,14 +106,19 @@ namespace Rdd.CfSteam
         /// <summary>
         /// 방 생성 시작
         /// </summary>
-        public void CreateRoom()
+        public void CreateRoom(out Func<bool> isRun, out Func<bool> isSuccess)
         {
             if (!IsInit)
             {
+                isRun = () => false;
+                isSuccess = () => false;
                 return;
             }
 
             Debug.Log("Creating room");
+            
+            isRun = () => true;
+            isSuccess = () => true;
         }
         
         /// <summary>

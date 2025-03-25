@@ -14,42 +14,130 @@ namespace Rdd.CfUi
         [Space]
         [SerializeField] private Button mCreateButton;
         [SerializeField] private Button mJoinButton;
+
+        private IEnumerator _mCoCreateRoom;
+        private IEnumerator _mCoJoinRoom;
         
         /// <summary>
         /// 컴포넌트 추가
-        /// Button 이벤트 제거 및 비활성화
+        /// Button 함수 제거 및 비활성화
         /// </summary>
         private void Awake()
         {
             // 컴포넌트 추가
             if (!mUIRoomSlotGroup) mUIRoomSlotGroup = transform.GetComponentInChildren<UIRoomSlotGroup>(true);
             
-            // Button 이벤트 제거 및 비활성화
+            // Button 함수 제거 및 비활성화
             mCreateButton.onClick = new Button.ButtonClickedEvent();
-            mCreateButton.interactable = false; 
-            
             mJoinButton.onClick = new Button.ButtonClickedEvent();
-            mJoinButton.interactable = false;
+            
+            InteractableAll(false);
+        }
+
+        /// <summary>
+        /// 코루틴 초기화
+        /// </summary>
+        private void OnDisable()
+        {
+            // 코루틴 초기화
+            if (_mCoCreateRoom != null) StopCoroutine(_mCoCreateRoom);
+            _mCoCreateRoom = null;
+            
+            if (_mCoJoinRoom != null) StopCoroutine(_mCoJoinRoom);
+            _mCoJoinRoom = null;
         }
 
         /// <summary>
         /// Steam Manager 대기
-        /// Button 이벤트 추가 및 활성화
+        /// 버튼 함수 추가
+        /// 버튼 활성화
         /// </summary>
         private IEnumerator Start()
         {
             // Steam Manager 대기
-            while (!SteamManager.Instance.IsInit)
+            while (!SteamManager.Instance) yield return null;
+            while (!SteamManager.Instance.IsInit) yield return null;
+            
+            // 버튼 함수 추가
+            mCreateButton.onClick.AddListener(OnClickCreateRoom);
+            mJoinButton.onClick.AddListener(OnClickJoinRoom);
+
+            // 버튼 활성화
+            InteractableAll(true);
+        }
+
+        /// <summary>
+        /// 모든 버튼 활성화
+        /// </summary>
+        private void InteractableAll(bool interactable)
+        {
+            mCreateButton.interactable = interactable;
+            mJoinButton.interactable = interactable;
+        }
+
+        /// <summary>
+        /// 방 만들기 ( 코루틴 호출 )
+        /// </summary>
+        private void OnClickCreateRoom()
+        {
+            if (_mCoCreateRoom != null) return;
+            
+            _mCoCreateRoom = CoOnClickCreateRoom();
+            StartCoroutine(_mCoCreateRoom);
+        }
+
+        /// <summary>
+        /// 방 만들기
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator CoOnClickCreateRoom()
+        {
+            // 버튼 비활성화
+            InteractableAll(false);
+            
+            // 요청
+            SteamManager.Instance.CreateRoom(out Func<bool> isRun, out Func<bool> isSuccess);
+
+            // 요청 대기
+            while (isRun()) yield return null;
+            
+            // 결과에 따라서 Null
+            if (isSuccess())
             {
-                yield return null;
+                yield break;
             }
+
+            _mCoCreateRoom = null;
+        }
+
+        /// <summary>
+        /// 방 찾기 ( 코루틴 호출 )
+        /// </summary>
+        private void OnClickJoinRoom()
+        {
+            if (_mCoJoinRoom != null) return;
             
-            // 버튼에 함수 추가
-            mCreateButton.onClick.AddListener(SteamManager.Instance.CreateRoom);
-            mCreateButton.interactable = true;
+            _mCoJoinRoom = CoOnClickJoinRoom();
+            StartCoroutine(_mCoJoinRoom);
+        }
+
+        /// <summary>
+        /// 방 찾기
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator CoOnClickJoinRoom()
+        {
+            // 버튼 비활성화
+            InteractableAll(false);
             
-            mJoinButton.onClick.AddListener(SteamManager.Instance.JoinRoom);
-            mJoinButton.interactable = true;
+            // 요청
+            SteamManager.Instance.JoinRoom();
+
+            // 요청 대기
+            yield return null;
+            
+            // 결과에 따라서 Null
+            _mCoJoinRoom = null;
         }
     }
 }

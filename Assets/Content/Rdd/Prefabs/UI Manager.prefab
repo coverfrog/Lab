@@ -287,10 +287,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2757229626920476433}
+  - component: {fileID: 8483490732684123001}
   - component: {fileID: 574833647353694439}
   - component: {fileID: 2315026614126841074}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: UI EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -311,6 +312,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1391208990346098391}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8483490732684123001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861891871730547475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6353d75a4d5e84a4590bf85371f1d7f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &574833647353694439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1252,6 +1265,7 @@ MonoBehaviour:
   mUIStartPages:
   - {fileID: 8774538867135412288}
   mUICanvasOverlay: {fileID: 4418563721979023357}
+  mUIEventSystem: {fileID: 8483490732684123001}
 --- !u!1 &6438246053923814882
 GameObject:
   m_ObjectHideFlags: 0

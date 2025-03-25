@@ -12,6 +12,7 @@ namespace Rdd.CfUi
         
         [Header("Reference")]
         [SerializeField] private UICanvasOverlay mUICanvasOverlay;
+        [SerializeField] private UIEventSystem mUIEventSystem;
 
         /// <summary>
         /// 열린 Overlay 페이지 관리를 할 자료 구조
@@ -50,6 +51,7 @@ namespace Rdd.CfUi
             base.Awake();
 
             if (!mUICanvasOverlay) mUICanvasOverlay = transform.GetComponentInChildren<UICanvasOverlay>(true);
+            if (!mUIEventSystem) mUIEventSystem = transform.GetComponentInChildren<UIEventSystem>(true);
         }
 
         /// <summary>

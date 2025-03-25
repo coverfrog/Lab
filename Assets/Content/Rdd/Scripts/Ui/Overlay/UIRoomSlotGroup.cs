@@ -5,11 +5,6 @@ using UnityEngine;
 
 namespace Rdd.CfUi
 {
-    public interface IUIRoomSlotGroup
-    {
-
-    }
-
     public class UIRoomSlotGroup : MonoBehaviour
     {
         [Header("Reference")]
