@@ -55,6 +55,21 @@ namespace Rdd.CfSteam
             mNetworkManager.StartClient();
         }
         
+        private void SteamMatchmakingOnLobbyMemberDisconnected(Lobby lobby, Friend friend)
+        {
+           Debug.Log("SteamMatchmakingOnLobbyMemberDisconnected");
+        }
+        
+        private void SteamMatchmakingOnLobbyMemberLeave(Lobby lobby, Friend friend)
+        {
+            Debug.Log("SteamMatchmakingOnLobbyMemberLeave");
+        }
+        
+        private void SteamMatchmakingOnLobbyInvite(Friend friend, Lobby lobby)
+        {
+            Debug.Log("SteamMatchmakingOnLobbyInvite");
+        }
+        
         /// <summary>
         /// 방을 찾아서 참가 요청을 보냈을 때
         /// </summary>
@@ -71,5 +86,7 @@ namespace Rdd.CfSteam
                 // ignore
             }
         }
+        
+    
     }
 }

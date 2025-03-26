@@ -54,8 +54,15 @@ namespace Rdd.CfSteam
             // 콜백 등록
             SteamMatchmaking.OnLobbyCreated += SteamMatchmakingOnLobbyCreated;
             SteamMatchmaking.OnLobbyEntered += SteamMatchmakingOnLobbyEntered;
+            SteamMatchmaking.OnLobbyMemberDisconnected += SteamMatchmakingOnLobbyMemberDisconnected;
+            SteamMatchmaking.OnLobbyMemberLeave += SteamMatchmakingOnLobbyMemberLeave;
+            SteamMatchmaking.OnLobbyInvite += SteamMatchmakingOnLobbyInvite;
+            
             SteamFriends.OnGameLobbyJoinRequested += SteamFriendsOnGameLobbyJoinRequested;
         }
+
+
+
 
         /// <summary>
         /// 콜백 해제 ( SteamCallbackManager.cs , Partial Class )
@@ -65,6 +72,10 @@ namespace Rdd.CfSteam
             // 콜백 해제
             SteamMatchmaking.OnLobbyCreated -= SteamMatchmakingOnLobbyCreated;
             SteamMatchmaking.OnLobbyEntered -= SteamMatchmakingOnLobbyEntered;
+            SteamMatchmaking.OnLobbyMemberDisconnected -= SteamMatchmakingOnLobbyMemberDisconnected;
+            SteamMatchmaking.OnLobbyMemberLeave -= SteamMatchmakingOnLobbyMemberLeave;
+            SteamMatchmaking.OnLobbyInvite -= SteamMatchmakingOnLobbyInvite;
+            
             SteamFriends.OnGameLobbyJoinRequested -= SteamFriendsOnGameLobbyJoinRequested;
         }
 
@@ -131,6 +142,13 @@ namespace Rdd.CfSteam
             }
             
             Debug.Log("Joining room");
+        }
+
+        public void LeaveRoom()
+        {
+            _mCurrentLobby?.Leave();
+            
+            mNetworkManager.Shutdown();
         }
     }
 }

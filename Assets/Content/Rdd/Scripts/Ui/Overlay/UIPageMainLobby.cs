@@ -15,6 +15,7 @@ namespace Rdd.CfUi
         [SerializeField] private Button mCreateButton;
         [SerializeField] private Button mJoinButton;
 
+        private IEnumerator _mCoInteractWait;
         private IEnumerator _mCoCreateRoom;
         private IEnumerator _mCoJoinRoom;
         private IEnumerator _mCoEnterRoom;
@@ -35,13 +36,15 @@ namespace Rdd.CfUi
             
             // Button 함수 제거 및 비활성화
             mCreateButton.onClick = new Button.ButtonClickedEvent();
+            mCreateButton.onClick.AddListener(OnClickCreateRoom);
+
             mJoinButton.onClick = new Button.ButtonClickedEvent();
-            
-            InteractableAll(false);
+            mJoinButton.onClick.AddListener(OnClickJoinRoom);
         }
 
         /// <summary>
         /// 전역 이벤트 등록
+        /// 버튼 Interact 대기
         /// </summary>
         public override void OnEnable()
         {
@@ -50,6 +53,9 @@ namespace Rdd.CfUi
             
             // 전역 이벤트 등록
             SteamManager.Instance.OnLobbyCreated += OnLobbyCreated;
+            
+            // 버튼 Interact 대기
+            InteractWait();
         }
 
         /// <summary>
@@ -63,6 +69,9 @@ namespace Rdd.CfUi
             if (SteamManager.Instance) SteamManager.Instance.OnLobbyCreated -= OnLobbyCreated;
             
             // 코루틴 초기화
+            if (_mCoInteractWait != null) StopCoroutine(_mCoInteractWait);
+            _mCoInteractWait = null;
+            
             if (_mCoCreateRoom != null) StopCoroutine(_mCoCreateRoom);
             _mCoCreateRoom = null;
             
@@ -80,21 +89,29 @@ namespace Rdd.CfUi
         }
 
         /// <summary>
-        /// Steam Manager 대기
-        /// 버튼 함수 추가
-        /// 버튼 활성화
+        /// 
         /// </summary>
-        private IEnumerator Start()
+        private void InteractWait()
         {
+            if (_mCoInteractWait != null) return;
+
+            _mCoInteractWait = CoInteractWait();
+            StartCoroutine(_mCoInteractWait);
+        }
+
+        /// <summary>
+        /// Steam Manager 대기 후 Button 활성화
+        /// </summary>
+        private IEnumerator CoInteractWait()
+        {
+            // 버튼 off
+            InteractableAll(false);
+            
             // Steam Manager 대기
             while (!SteamManager.Instance) yield return null;
             while (!SteamManager.Instance.IsInit) yield return null;
             
-            // 버튼 함수 추가
-            mCreateButton.onClick.AddListener(OnClickCreateRoom);
-            mJoinButton.onClick.AddListener(OnClickJoinRoom);
-
-            // 버튼 활성화
+            // 버튼 on
             InteractableAll(true);
         }
 
@@ -216,7 +233,6 @@ namespace Rdd.CfUi
             if (!UIManager.Instance.GetPage(out UIPageRoom uiPageRoom))
             {
                 _mCoEnterRoom = null;
-                
                 yield break;
             }
 
