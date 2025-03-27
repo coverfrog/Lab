@@ -110,6 +110,7 @@ namespace Rdd.CfUi
             // Steam Manager 대기
             while (!SteamManager.Instance) yield return null;
             while (!SteamManager.Instance.IsInit) yield return null;
+            while (SteamManager.Instance.GetIsInRoom) yield return null;
             
             // 버튼 on
             InteractableAll(true);

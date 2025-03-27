@@ -15,6 +15,8 @@ namespace Rdd.CfUi
 
         private IEnumerator _mCoGameStart;
         private IEnumerator _mCoClose;
+
+        private bool _mIsUiPageLoadingSlideComplete;
         
         /// <summary>
         /// Button 함수 제거 및 비활성화
@@ -29,7 +31,25 @@ namespace Rdd.CfUi
         }
 
         /// <summary>
+        /// 이벤트 등록
+        /// 값 초기화
+        /// </summary>
+        public override void OnEnable()
+        {
+            // Base
+            base.OnEnable();
+            
+            // 이벤트 등록
+            UIManager.Instance.GetPage(out UIPageLoading uiPageLoading);
+            uiPageLoading.OnSliderComplete += OnLoadingSliderComplete;
+            
+            // 값 초기화
+            _mIsUiPageLoadingSlideComplete = false;
+        }
+
+        /// <summary>
         /// 코루틴 초기화
+        /// 이벤트 해제
         /// </summary>
         private void OnDisable()
         {
@@ -39,6 +59,12 @@ namespace Rdd.CfUi
             
             if (_mCoClose != null) StopCoroutine(_mCoClose);
             _mCoClose = null;
+            
+            // 이벤트 해제
+            if (!UIManager.Instance) return;
+            
+            UIManager.Instance.GetPage(out UIPageLoading uiPageLoading);
+            uiPageLoading.OnSliderComplete -= OnLoadingSliderComplete;
         }
 
         /// <summary>
@@ -85,9 +111,50 @@ namespace Rdd.CfUi
         /// </summary>
         private IEnumerator CoGameStart()
         {
-            yield return null;
+            // 버튼은 막기
+            InteractableAll(false);
             
+            // Loading 시작 
+            UIManager.Instance.GetPage(out UIPageLoading uiPageLoading);
+            uiPageLoading.SetActive(true);
+            
+            // Loading Data 요청
+#if false
+            // Debug 용도의 Loading Script
+            
+            for (float t = 0.0f; t < 5.0f; t += Time.deltaTime)
+            {
+                var percent = t / 5.0f;
+                
+                uiPageLoading.UpdateValue(percent);
+                
+                yield return null;
+            }
+            
+            uiPageLoading.UpdateValue(1.0f);
+            
+#else
+            // Steam Manager 에게 로드 요청
+            SteamManager.Instance.LoadGameLevel();
+#endif
+
+            // Loading Ui 가 실제로 끝 점에 도달할 때 까지 대기
+            while (!_mIsUiPageLoadingSlideComplete) yield return new WaitForEndOfFrame();
+            
+            // 다음 화면 보여주기
+            Debug.Log("Loading End!");
+            
+            // Null
             _mCoGameStart = null;
+        }
+
+        /// <summary>
+        /// 슬라이더가 실제로 UI 반영이 되는 시점을 얻기 위해 이벤트 추가
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void OnLoadingSliderComplete()
+        {
+            _mIsUiPageLoadingSlideComplete = true;
         }
 
         /// <summary>

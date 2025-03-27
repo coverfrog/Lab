@@ -20,6 +20,11 @@ namespace Rdd.CfSteam
         private Lobby? _mCurrentLobby;
         
         /// <summary>
+        /// 어떠한 접속 상태에도 속한다면 방에 있는 것으로 간주
+        /// </summary>
+        public bool GetIsInRoom => mNetworkManager.IsHost || mNetworkManager.IsServer || mNetworkManager.IsClient;
+        
+        /// <summary>
         /// 컴포넌트 추가
         /// </summary>
         protected override void Awake()
@@ -144,11 +149,22 @@ namespace Rdd.CfSteam
             Debug.Log("Joining room");
         }
 
+        /// <summary>
+        /// 방 떠나기
+        /// </summary>
         public void LeaveRoom()
         {
             _mCurrentLobby?.Leave();
             
             mNetworkManager.Shutdown();
+        }
+
+        /// <summary>
+        /// 게임 레벨을 로드 시작
+        /// </summary>
+        public void LoadGameLevel()
+        {
+            // todo : scene manager 로 특정 scene 로 이동 시켜주기
         }
     }
 }
